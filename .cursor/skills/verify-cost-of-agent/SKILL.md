@@ -275,4 +275,10 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs smoke
 
 ## Feature Map
 
-See `features/README.md` for detailed feature breakdown and driving instructions.
+See [`references/features/`](references/features/) for detailed feature breakdown and CLI-driven verification instructions.
+
+Key features:
+- [Home Agent List](references/features/home-agent-list.md) — 12 cost-sorted cards
+- [Agent Detail Page](references/features/agent-detail-page.md) — Pricing, includes, caveats (Bahasa)
+- [Navigation Flow](references/features/navigation-flow.md) — Home ↔ detail via cards/back links
+- [Static Build Routes](references/features/static-build-routes.md) — 13 pre-rendered routes
