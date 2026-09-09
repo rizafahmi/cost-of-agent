@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function Home() {
   // Sort by bandLowUsd ascending
-  const sortedAgents = [...agents].sort((a, b) => a.bandLowUsd - b.bandHighUsd);
+  const sortedAgents = [...agents].sort((a, b) => a.bandLowUsd - b.bandLowUsd);
 
   return (
     <div className="container">
