@@ -290,15 +290,31 @@ function cmdBuild() {
   }
 }
 
-function cmdPreview() {
+async function cmdPreview() {
   console.log('Starting preview server...');
   
   // Check if already running
   const state = loadState();
   if (state && state.pid && isProcessRunning(state.pid)) {
-    console.log(`✓ Preview already running (PID ${state.pid}, port ${state.port})`);
-    console.log(`  URL: http://${COA_HOST}:${state.port}/`);
-    process.exit(0);
+    // Try to verify it's actually responding
+    try {
+      const res = await httpGet(`http://${state.host}:${state.port}/`);
+      if (res.statusCode === 200) {
+        console.log(`✓ Preview already running (PID ${state.pid}, port ${state.port})`);
+        console.log(`  URL: http://${state.host}:${state.port}/`);
+        process.exit(0);
+      }
+    } catch {
+      // Process exists but not responding, might be starting up
+      const age = Date.now() - new Date(state.startedAt).getTime();
+      if (age < 5000) {
+        // Give it time to start (less than 5s old)
+        console.log(`✓ Preview starting (PID ${state.pid}, port ${state.port})`);
+        console.log(`  URL: http://${state.host}:${state.port}/`);
+        console.log('  (Use "wait-ready" to confirm server is responding)');
+        process.exit(0);
+      }
+    }
   }
   
   // Clear stale state
@@ -318,10 +334,13 @@ function cmdPreview() {
   const child = spawn('pnpm', args, {
     cwd: WORKSPACE_ROOT,
     detached: true,
-    stdio: 'ignore',
+    stdio: ['ignore', 'ignore', 'ignore'],
   });
   
   child.unref();
+  
+  // Give it a moment to start
+  await new Promise(resolve => setTimeout(resolve, 500));
   
   const newState = {
     pid: child.pid,
@@ -877,51 +896,53 @@ Examples:
 const command = process.argv[2];
 const args = process.argv.slice(3);
 
-switch (command) {
-  case 'doctor':
-    cmdDoctor();
-    break;
-  case 'build':
-    cmdBuild();
-    break;
-  case 'preview':
-    cmdPreview();
-    break;
-  case 'stop':
-    cmdStop();
-    break;
-  case 'wait-ready':
-    cmdWaitReady();
-    break;
-  case 'get':
-    cmdGet(args[0]);
-    break;
-  case 'order':
-    cmdOrder();
-    break;
-  case 'check-home':
-    cmdCheckHome();
-    break;
-  case 'check-detail':
-    cmdCheckDetail(args[0]);
-    break;
-  case 'snapshot':
-    cmdSnapshot(args[0]);
-    break;
-  case 'evidence-init':
-    cmdEvidenceInit();
-    break;
-  case 'smoke':
-    cmdSmoke();
-    break;
-  case 'help':
-  case '--help':
-  case '-h':
-  case undefined:
-    cmdHelp();
-    break;
-  default:
-    console.error(`Unknown command: ${command}`);
-    console.error('Run with --help for usage');
-    process.exit(1);
-}
+(async () => {
+  switch (command) {
+    case 'doctor':
+      await cmdDoctor();
+      break;
+    case 'build':
+      cmdBuild();
+      break;
+    case 'preview':
+      await cmdPreview();
+      break;
+    case 'stop':
+      cmdStop();
+      break;
+    case 'wait-ready':
+      await cmdWaitReady();
+      break;
+    case 'get':
+      await cmdGet(args[0]);
+      break;
+    case 'order':
+      await cmdOrder();
+      break;
+    case 'check-home':
+      await cmdCheckHome();
+      break;
+    case 'check-detail':
+      await cmdCheckDetail(args[0]);
+      break;
+    case 'snapshot':
+      await cmdSnapshot(args[0]);
+      break;
+    case 'evidence-init':
+      cmdEvidenceInit();
+      break;
+    case 'smoke':
+      await cmdSmoke();
+      break;
+    case 'help':
+    case '--help':
+    case '-h':
+    case undefined:
+      cmdHelp();
+      break;
+    default:
+      console.error(`Unknown command: ${command}`);
+      console.error('Run with --help for usage');
+      process.exit(1);
+  }
+})();
