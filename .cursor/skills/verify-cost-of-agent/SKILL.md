@@ -25,6 +25,10 @@ Systematic verification for the Cost-of-Agent static site — a Bahasa Indonesia
 
 ## Launch
 
+**Control CLI:** `.cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs`
+
+All launch, verification, and cleanup operations use the control CLI. It manages state, ensures idempotency, and provides agent-friendly output.
+
 ### Prerequisites
 ```bash
 # Check dependencies installed
@@ -33,68 +37,44 @@ test -d /workspace/node_modules || pnpm install
 
 ### Build static site
 ```bash
-cd /workspace
-pnpm build
+node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs build
 # Output: dist/ directory with static HTML
 # Exit code 0 = success
 ```
 
 ### Start preview server
 ```bash
-# Find free port (suggest 4323, 4324, or 4325)
-PORT=4323
-netstat -tuln 2>/dev/null | grep ":$PORT " && echo "Port busy" && exit 1
-
-# Launch preview (binds to 127.0.0.1 for isolation)
-pnpm preview --host 127.0.0.1 --port $PORT
-# Wait for: "Local    http://127.0.0.1:$PORT/"
+node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs preview
+# Starts server on 127.0.0.1:4323 (override with COA_PORT, COA_HOST)
+# Persists PID and port to .cursor/skills/verify-cost-of-agent/evidence/.control/preview.json
+# Idempotent: safe to rerun (reuses if healthy, restarts if stale)
 ```
 
-**Isolation requirement:** Always bind to `127.0.0.1` and explicit port. Never use `0.0.0.0` or wildcard host. Record the PID of the preview process for clean shutdown.
+**Isolation requirement:** Always binds to `127.0.0.1` and explicit port. Never uses `0.0.0.0` or wildcard host. State is tracked for clean shutdown.
 
-### Tmux session management
+### Wait for server ready
 ```bash
-SESSION_NAME="cost-agent-preview"
-tmux has-session -t "=$SESSION_NAME" 2>/dev/null || tmux new-session -d -s "$SESSION_NAME" -c "/workspace"
-tmux send-keys -t "$SESSION_NAME:0.0" "cd /workspace && pnpm preview --host 127.0.0.1 --port 4323" C-m
-# Wait 3 seconds for server startup
-sleep 3
-tmux capture-pane -t "$SESSION_NAME:0.0" -p | grep "Local"
+node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs wait-ready
+# Polls until http://127.0.0.1:4323/ returns 200 or timeout
+# Exit code 0 = ready, non-zero = timeout
 ```
 
 ## Doctor
 
-Run these checks after launch, before driving:
+Run diagnostics after launch to verify build artifacts, server response, content, and route count.
 
-### 1. Build artifacts exist
+### Comprehensive diagnostics
 ```bash
-test -f /workspace/dist/index.html || echo "FAIL: Home page not built"
-test -d /workspace/dist/agen || echo "FAIL: Agent detail pages not built"
-ls /workspace/dist/agen/ | wc -l  # Should be 12 directories
+node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs doctor
+# Checks:
+# 1. Build artifacts exist (dist/index.html, dist/agen/, 12 agent dirs)
+# 2. Server responds (home 200, detail 200)
+# 3. Key content present (title, agent-card, Bahasa sections)
+# 4. Route count (13 total: 1 home + 12 agents)
+# Exit code 0 = all passed, non-zero = failures
 ```
 
-### 2. Server responds
-```bash
-curl -f -s http://127.0.0.1:4323/ > /dev/null && echo "OK: Home page serves" || echo "FAIL: Server not responding"
-curl -f -s http://127.0.0.1:4323/agen/cursor-pro/ > /dev/null && echo "OK: Detail page serves" || echo "FAIL: Detail route broken"
-```
-
-### 3. Key content present
-```bash
-# Home should have title and agent cards
-curl -s http://127.0.0.1:4323/ | grep -q "Cost of Agent" && echo "OK: Home title found"
-curl -s http://127.0.0.1:4323/ | grep -q "agent-card" && echo "OK: Agent cards rendered"
-
-# Detail should have pricing and sources
-curl -s http://127.0.0.1:4323/agen/cursor-pro/ | grep -q "Cursor Pro" && echo "OK: Detail title found"
-curl -s http://127.0.0.1:4323/agen/cursor-pro/ | grep -q "Sumber Data" && echo "OK: Sources section present"
-```
-
-### 4. Route count matches data
-```bash
-# Should have 12 agent routes + 1 home = 13 total HTML files
-find /workspace/dist -name "index.html" | wc -l  # Should be 13
-```
+Doctor output is agent-parseable with clear ✓/✗ lines for each check.
 
 ## Drive
 
@@ -195,19 +175,85 @@ mkdir -p "$EVIDENCE_DIR"
 ## Cleanup
 
 ```bash
-# Stop preview server (use recorded PID or tmux session)
-tmux kill-session -t "cost-agent-preview" 2>/dev/null || true
+# Stop preview server (reads PID from state, graceful shutdown)
+node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs stop
+# Sends SIGTERM, waits, then SIGKILL if needed
+# Clears state file
+# Idempotent: safe to rerun
 
-# Verify server stopped
-curl -s http://127.0.0.1:4323/ > /dev/null 2>&1 && echo "WARNING: Server still running" || echo "✓ Server stopped"
-
+# Evidence and dist/ are preserved
 # Do NOT delete evidence directory
 # Do NOT delete dist/ (build artifacts are safe to leave)
 ```
 
 ## Helpers
 
-None required. All checks use standard Unix tools (curl, grep, find, ls) and optional CDP for screenshots.
+All helpers use the control CLI for reproducibility and agent-friendly output.
+
+### Extract agent order from home
+```bash
+node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs order
+# Prints agent IDs (one per line) in display order
+# First should be "continue" (lowest cost), last "devin" (highest)
+```
+
+### Check home page structure
+```bash
+node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs check-home
+# Asserts:
+# - Agent count ~12
+# - First agent is "continue" (bandLowUsd: 0)
+# - Last agent is "devin" (bandLowUsd: 500)
+# Exit code 0 = passed, non-zero = failed
+```
+
+### Check detail page sections
+```bash
+node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs check-detail cursor-pro
+# Asserts presence of:
+# - Agent name heading (h1)
+# - "Yang Termasuk" (includes)
+# - "Catatan Penting" (caveats)
+# - "Sumber Data" (sources)
+# Exit code 0 = passed, non-zero = failed
+```
+
+### Fetch page for inspection
+```bash
+node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs get /
+node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs get /agen/cursor-pro/
+# Prints HTTP status and response body
+```
+
+### Create structural snapshot
+```bash
+node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs snapshot /
+node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs snapshot /agen/cursor-pro/
+# Outputs JSON with structural summary (agent IDs, sections, counts)
+# Agent-friendly for evidence capture
+```
+
+### Initialize evidence directory
+```bash
+node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs evidence-init
+# Creates evidence/run-YYYYMMDD-HHMMSS/ with README
+# Prints directory path to stdout for scripting
+```
+
+### Full smoke test
+```bash
+node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs smoke
+# Runs full verification sequence:
+# 1. Build (if needed)
+# 2. Start preview
+# 3. Wait for ready
+# 4. Doctor
+# 5. Check home
+# 6. Check detail (cursor-pro)
+# 7. Create evidence
+# 8. Stop server
+# Exit code 0 = all passed, non-zero = failures
+```
 
 ## Gotchas
 
@@ -229,4 +275,10 @@ None required. All checks use standard Unix tools (curl, grep, find, ls) and opt
 
 ## Feature Map
 
-See `features/README.md` for detailed feature breakdown and driving instructions.
+See [`references/features/`](references/features/) for detailed feature breakdown and CLI-driven verification instructions.
+
+Key features:
+- [Home Agent List](references/features/home-agent-list.md) — 12 cost-sorted cards
+- [Agent Detail Page](references/features/agent-detail-page.md) — Pricing, includes, caveats (Bahasa)
+- [Navigation Flow](references/features/navigation-flow.md) — Home ↔ detail via cards/back links
+- [Static Build Routes](references/features/static-build-routes.md) — 13 pre-rendered routes
