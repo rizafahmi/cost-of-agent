@@ -1,0 +1,351 @@
+---
+import { agents, type AgentCost } from '../../data/agents';
+
+export function getStaticPaths() {
+  return agents.map(agent => ({
+    params: { id: agent.id },
+    props: { agent }
+  }));
+}
+
+interface Props {
+  agent: AgentCost;
+}
+
+const { agent } = Astro.props;
+
+const formatUSD = (amount: number) => {
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(amount);
+};
+
+const categoryLabels = {
+  ide: 'IDE',
+  cli: 'CLI',
+  cloud: 'Cloud',
+  'oss-byok': 'OSS/BYOK'
+};
+
+const billingLabels = {
+  seat: 'Seat',
+  credits: 'Credits',
+  token: 'Token',
+  hybrid: 'Hybrid'
+};
+---
+
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={`Biaya nyata ${agent.name} - ${formatUSD(agent.bandLowUsd)} sampai ${formatUSD(agent.bandHighUsd)} per bulan`} />
+    <title>{agent.name} — Cost of Agent</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: system-ui, -apple-system, sans-serif;
+        line-height: 1.6;
+        color: #1a1a1a;
+        background: #f8f9fa;
+        padding: 2rem 1rem;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .back-link {
+        display: inline-block;
+        margin-bottom: 2rem;
+        color: #0969da;
+        text-decoration: none;
+        font-size: 0.875rem;
+      }
+
+      .back-link:hover {
+        text-decoration: underline;
+      }
+
+      .agent-detail {
+        background: white;
+        border: 1px solid #d0d7de;
+        border-radius: 8px;
+        padding: 2rem;
+      }
+
+      header {
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 2px solid #d0d7de;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        color: #0d1117;
+      }
+
+      .vendor {
+        font-size: 1.125rem;
+        color: #57606a;
+        margin-bottom: 1rem;
+      }
+
+      .meta {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 4px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        text-transform: uppercase;
+      }
+
+      .badge-category {
+        background: #ddf4ff;
+        color: #0969da;
+      }
+
+      .badge-billing {
+        background: #fff8c5;
+        color: #7d4e00;
+      }
+
+      .pricing-section {
+        background: #f6f8fa;
+        border-radius: 6px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+      }
+
+      .pricing-comparison {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        gap: 2rem;
+        flex-wrap: wrap;
+      }
+
+      .price-item {
+        text-align: center;
+      }
+
+      .price-label {
+        font-size: 0.875rem;
+        color: #57606a;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+
+      .price-sticker {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #6e7781;
+        text-decoration: line-through;
+      }
+
+      .price-band {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #0d1117;
+      }
+
+      .price-explainer {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: #fff8c5;
+        border-left: 4px solid #f0ad4e;
+        border-radius: 4px;
+        font-size: 0.9375rem;
+      }
+
+      .price-explainer strong {
+        color: #7d4e00;
+      }
+
+      section {
+        margin: 2rem 0;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: #0d1117;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      li {
+        padding: 0.5rem 0;
+        padding-left: 1.5rem;
+        position: relative;
+      }
+
+      li:before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        color: #1a7f37;
+        font-weight: bold;
+      }
+
+      .caveats li:before {
+        content: "⚠";
+        color: #f0ad4e;
+      }
+
+      .sources {
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #d0d7de;
+      }
+
+      .source-link {
+        display: block;
+        padding: 0.75rem;
+        margin: 0.5rem 0;
+        background: #f6f8fa;
+        border-radius: 4px;
+        color: #0969da;
+        text-decoration: none;
+        font-size: 0.875rem;
+      }
+
+      .source-link:hover {
+        background: #ddf4ff;
+      }
+
+      .verified {
+        font-size: 0.875rem;
+        color: #57606a;
+        margin-top: 0.25rem;
+      }
+
+      footer {
+        text-align: center;
+        padding: 2rem 0;
+        color: #57606a;
+        margin-top: 3rem;
+      }
+
+      @media (max-width: 640px) {
+        h1 {
+          font-size: 2rem;
+        }
+
+        .pricing-comparison {
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .price-band,
+        .price-sticker {
+          font-size: 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a href="/" class="back-link">← Kembali ke daftar</a>
+
+      <div class="agent-detail">
+        <header>
+          <h1>{agent.name}</h1>
+          <div class="vendor">{agent.vendor}</div>
+          <div class="meta">
+            <span class="badge badge-category">{categoryLabels[agent.category]}</span>
+            <span class="badge badge-billing">{billingLabels[agent.billing]}</span>
+          </div>
+        </header>
+
+        <div class="pricing-section">
+          <div class="pricing-comparison">
+            {agent.stickerUsd && (
+              <div class="price-item">
+                <div class="price-label">Harga Sticker</div>
+                <div class="price-sticker">{formatUSD(agent.stickerUsd)}</div>
+                <div class="verified">per bulan</div>
+              </div>
+            )}
+            
+            <div class="price-item">
+              <div class="price-label">Biaya Nyata</div>
+              <div class="price-band">
+                {formatUSD(agent.bandLowUsd)}
+                {agent.bandLowUsd !== agent.bandHighUsd && (
+                  <span style="font-size: 1.5rem;"> – {formatUSD(agent.bandHighUsd)}</span>
+                )}
+              </div>
+              <div class="verified">per bulan</div>
+            </div>
+          </div>
+
+          {agent.stickerUsd && agent.bandHighUsd > agent.stickerUsd && (
+            <div class="price-explainer">
+              <strong>Kenapa beda?</strong> Harga sticker tidak termasuk biaya token tambahan, 
+              overage, atau usage di atas kuota. Biaya nyata mencerminkan total cost of ownership 
+              bulanan termasuk semua komponen biaya.
+            </div>
+          )}
+        </div>
+
+        <section>
+          <h2>Yang Termasuk</h2>
+          <ul>
+            {agent.includes.map(item => (
+              <li>{item}</li>
+            ))}
+          </ul>
+        </section>
+
+        <section class="caveats">
+          <h2>Catatan Penting</h2>
+          <ul>
+            {agent.caveats.map(caveat => (
+              <li>{caveat}</li>
+            ))}
+          </ul>
+        </section>
+
+        <div class="sources">
+          <h2>Sumber Data</h2>
+          {agent.sources.map(source => (
+            <a href={source.url} target="_blank" rel="noopener noreferrer" class="source-link">
+              {source.label} →
+              <div class="verified">Dicek: {source.checkedAt}</div>
+            </a>
+          ))}
+          <p style="margin-top: 1rem; font-size: 0.875rem; color: #57606a;">
+            Terakhir diverifikasi: {agent.lastVerified}
+          </p>
+        </div>
+      </div>
+
+      <footer>
+        <a href="/" class="back-link">← Kembali ke daftar</a>
+      </footer>
+    </div>
+  </body>
+</html>

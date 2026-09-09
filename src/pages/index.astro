@@ -1,0 +1,245 @@
+---
+import { agents } from '../data/agents';
+
+// Sort by bandLowUsd ascending
+const sortedAgents = [...agents].sort((a, b) => a.bandLowUsd - b.bandLowUsd);
+
+// Helper to format currency
+const formatUSD = (amount: number) => {
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(amount);
+};
+
+const categoryLabels = {
+  ide: 'IDE',
+  cli: 'CLI',
+  cloud: 'Cloud',
+  'oss-byok': 'OSS/BYOK'
+};
+
+const billingLabels = {
+  seat: 'Seat',
+  credits: 'Credits',
+  token: 'Token',
+  hybrid: 'Hybrid'
+};
+---
+
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content="Direktori biaya agen coding AI — harga nyata bulanan (seat + token + overage), bukan sticker. Bahasa Indonesia." />
+    <title>Cost of Agent — Biaya Nyata Agen Coding AI</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: system-ui, -apple-system, sans-serif;
+        line-height: 1.6;
+        color: #1a1a1a;
+        background: #f8f9fa;
+        padding: 2rem 1rem;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      header {
+        margin-bottom: 3rem;
+        text-align: center;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        color: #0d1117;
+      }
+
+      .subtitle {
+        font-size: 1.125rem;
+        color: #57606a;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .agent-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+      }
+
+      .agent-card {
+        background: white;
+        border: 1px solid #d0d7de;
+        border-radius: 8px;
+        padding: 1.5rem;
+        transition: box-shadow 0.2s, transform 0.2s;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+      }
+
+      .agent-card:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+      }
+
+      .agent-header {
+        margin-bottom: 1rem;
+      }
+
+      .agent-name {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #0969da;
+        margin-bottom: 0.25rem;
+      }
+
+      .agent-vendor {
+        font-size: 0.875rem;
+        color: #57606a;
+      }
+
+      .agent-meta {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        text-transform: uppercase;
+      }
+
+      .badge-category {
+        background: #ddf4ff;
+        color: #0969da;
+      }
+
+      .badge-billing {
+        background: #fff8c5;
+        color: #7d4e00;
+      }
+
+      .pricing {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #d0d7de;
+      }
+
+      .price-sticker {
+        font-size: 0.875rem;
+        color: #57606a;
+        text-decoration: line-through;
+        margin-bottom: 0.25rem;
+      }
+
+      .price-band {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #0d1117;
+      }
+
+      .price-label {
+        font-size: 0.875rem;
+        color: #57606a;
+        margin-top: 0.25rem;
+      }
+
+      footer {
+        text-align: center;
+        padding: 2rem 0;
+        color: #57606a;
+        border-top: 1px solid #d0d7de;
+        margin-top: 3rem;
+      }
+
+      footer a {
+        color: #0969da;
+        text-decoration: none;
+      }
+
+      footer a:hover {
+        text-decoration: underline;
+      }
+
+      @media (max-width: 640px) {
+        h1 {
+          font-size: 2rem;
+        }
+
+        .agent-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>💰 Cost of Agent</h1>
+        <p class="subtitle">
+          Direktori biaya nyata agen coding AI — harga bulanan (seat + token + overage), bukan cuma sticker.
+        </p>
+      </header>
+
+      <main>
+        <div class="agent-grid">
+          {sortedAgents.map(agent => (
+            <a href={`/agen/${agent.id}/`} class="agent-card">
+              <div class="agent-header">
+                <h2 class="agent-name">{agent.name}</h2>
+                <div class="agent-vendor">{agent.vendor}</div>
+              </div>
+
+              <div class="agent-meta">
+                <span class="badge badge-category">{categoryLabels[agent.category]}</span>
+                <span class="badge badge-billing">{billingLabels[agent.billing]}</span>
+              </div>
+
+              <div class="pricing">
+                {agent.stickerUsd && (
+                  <div class="price-sticker">
+                    Sticker: {formatUSD(agent.stickerUsd)}/bulan
+                  </div>
+                )}
+                <div class="price-band">
+                  {formatUSD(agent.bandLowUsd)}
+                  {agent.bandLowUsd !== agent.bandHighUsd && (
+                    <> – {formatUSD(agent.bandHighUsd)}</>
+                  )}
+                </div>
+                <div class="price-label">biaya nyata per bulan</div>
+              </div>
+            </a>
+          ))}
+        </div>
+      </main>
+
+      <footer>
+        <p>
+          Data harga dicek dari sumber resmi. Terakhir diverifikasi September 2026.<br />
+          <a href="https://github.com/yourusername/cost-of-agent" target="_blank">Kontribusi di GitHub</a>
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>
