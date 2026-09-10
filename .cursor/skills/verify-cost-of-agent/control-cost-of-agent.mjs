@@ -161,10 +161,10 @@ async function cmdDoctor() {
   try {
     const agenDirs = execSync(`ls -1 "${join(DIST_DIR, 'agen')}" 2>/dev/null | wc -l`, { encoding: 'utf8' }).trim();
     const count = parseInt(agenDirs);
-    if (count === 12) {
+    if (count === 9) {
       console.log(`  ✓ Agent directories count: ${count}`);
     } else {
-      console.log(`  ✗ FAIL: Expected 12 agent directories, found ${count}`);
+      console.log(`  ✗ FAIL: Expected 9 agent directories, found ${count}`);
       allPassed = false;
     }
   } catch {
@@ -481,27 +481,27 @@ async function cmdCheckHome() {
     
     let allPassed = true;
     
-    // Check count
-    if (ids.length >= 10 && ids.length <= 15) {
+    // Check count (reasonable range allows 8-12 agents)
+    if (ids.length >= 8 && ids.length <= 12) {
       console.log(`✓ Agent count: ${ids.length} (reasonable range)`);
     } else {
-      console.log(`✗ FAIL: Expected ~12 agents, found ${ids.length}`);
+      console.log(`✗ FAIL: Expected 8-12 agents, found ${ids.length}`);
       allPassed = false;
     }
     
-    // Check first is continue (lowest bandLowUsd: 0)
-    if (ids[0] === 'continue') {
-      console.log(`✓ First agent: continue (lowest cost)`);
+    // Check first is muse-code (lowest bandLowUsd: 5)
+    if (ids[0] === 'muse-code') {
+      console.log(`✓ First agent: muse-code (lowest cost)`);
     } else {
-      console.log(`✗ FAIL: First agent is "${ids[0]}", expected "continue"`);
+      console.log(`✗ FAIL: First agent is "${ids[0]}", expected "muse-code"`);
       allPassed = false;
     }
     
-    // Check last is devin (highest bandLowUsd: 500)
-    if (ids[ids.length - 1] === 'devin') {
-      console.log(`✓ Last agent: devin (highest cost)`);
+    // Check last is cursor-business (highest bandLowUsd: 40)
+    if (ids[ids.length - 1] === 'cursor-business') {
+      console.log(`✓ Last agent: cursor-business (highest cost)`);
     } else {
-      console.log(`✗ FAIL: Last agent is "${ids[ids.length - 1]}", expected "devin"`);
+      console.log(`✗ FAIL: Last agent is "${ids[ids.length - 1]}", expected "cursor-business"`);
       allPassed = false;
     }
     
@@ -766,7 +766,7 @@ async function cmdSmoke() {
         ids.push(match[1]);
       }
       
-      if (ids.length >= 10 && ids[0] === 'continue' && ids[ids.length - 1] === 'devin') {
+      if (ids.length >= 8 && ids[0] === 'muse-code' && ids[ids.length - 1] === 'cursor-business') {
         console.log(`  ✓ Home page structure valid (${ids.length} agents, correct order)`);
       } else {
         console.log(`  ✗ Home page structure invalid`);

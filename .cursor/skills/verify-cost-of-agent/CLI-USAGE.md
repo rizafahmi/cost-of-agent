@@ -55,7 +55,7 @@ node control-cost-of-agent.mjs wait-ready
 ```bash
 node control-cost-of-agent.mjs doctor
 # Checks:
-#   1. Build artifacts (dist/index.html, dist/agen/, 12 agent dirs)
+#   1. Build artifacts (dist/index.html, dist/agen/, 9 agent dirs)
 #   2. Server response (home 200, detail 200)
 #   3. Key content (title, agent-card, Bahasa sections)
 #   4. Route count (10 total: 1 home + 9 agents)
@@ -68,8 +68,8 @@ node control-cost-of-agent.mjs doctor
 node control-cost-of-agent.mjs check-home
 # Checks:
 #   - Agent count ~9
-#   - First agent: "continue" (lowest bandLowUsd: 0)
-#   - Last agent: "devin" (highest bandLowUsd: 500)
+#   - First agent: "muse-code" (lowest bandLowUsd: 5)
+#   - Last agent: "cursor-business" (highest bandLowUsd: 40)
 # Exit: 0 = passed, non-zero = failed
 ```
 
@@ -90,8 +90,8 @@ node control-cost-of-agent.mjs check-detail cursor-pro
 ```bash
 node control-cost-of-agent.mjs order
 # Output: One agent ID per line (stdout)
-# First: "continue" (lowest cost)
-# Last: "devin" (highest cost)
+# First: "muse-code" (lowest cost)
+# Last: "cursor-business" (highest cost)
 # Exit: 0 = success, non-zero = fetch failed
 ```
 
