@@ -1,5 +1,5 @@
 ---
-import { agents, type AgentCost } from '../../data/agents';
+import { agents, type AgentCost, USD_IDR, kursCheckedAt } from '../../data/agents';
 
 export function getStaticPaths() {
   return agents.map(agent => ({
@@ -32,6 +32,17 @@ const formatPerTokenUSD = (amount: number) => {
     maximumFractionDigits: 2
   }).format(amount);
 };
+
+const formatIDR = (amount: number) => {
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(amount);
+};
+
+const usdToIdr = (usd: number) => usd * USD_IDR;
 
 const categoryLabels = {
   ide: 'IDE',
@@ -352,6 +363,23 @@ const billingLabels = {
         margin-top: 0.25rem;
       }
 
+      .price-idr {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #6e7781;
+        margin-top: 0.5rem;
+      }
+
+      .kurs-disclaimer {
+        background: #fff8c5;
+        border-left: 4px solid #f0ad4e;
+        padding: 1rem;
+        margin-top: 1rem;
+        border-radius: 4px;
+        font-size: 0.875rem;
+        color: #7d4e00;
+      }
+
       footer {
         text-align: center;
         padding: 2rem 0;
@@ -392,7 +420,7 @@ const billingLabels = {
 
         <div class="pricing-section">
           <div class="pricing-comparison">
-            {agent.stickerUsd && (
+            {agent.stickerUsd && agent.stickerUsd > 0 && (
               <div class="price-item">
                 <div class="price-label">Harga Sticker</div>
                 <div class="price-sticker">{formatUSD(agent.stickerUsd)}</div>
@@ -401,7 +429,7 @@ const billingLabels = {
             )}
             
             <div class="price-item">
-              <div class="price-label">Biaya Nyata</div>
+              <div class="price-label">Biaya Nyata (USD)</div>
               <div class="price-band">
                 {formatUSD(agent.bandLowUsd)}
                 {agent.bandLowUsd !== agent.bandHighUsd && (
@@ -409,6 +437,12 @@ const billingLabels = {
                 )}
               </div>
               <div class="verified">per bulan</div>
+              <div class="price-idr">
+                {formatIDR(usdToIdr(agent.bandLowUsd))}
+                {agent.bandLowUsd !== agent.bandHighUsd && (
+                  <> – {formatIDR(usdToIdr(agent.bandHighUsd))}</>
+                )}
+              </div>
             </div>
           </div>
 
@@ -429,7 +463,12 @@ const billingLabels = {
             </div>
           )}
 
-          {agent.stickerUsd && agent.bandHighUsd > agent.stickerUsd && (
+          <div class="kurs-disclaimer">
+            <strong>Catatan Kurs:</strong> IDR dihitung dari USD dengan kurs mid-market ~{USD_IDR.toLocaleString('id-ID')} (dicek {kursCheckedAt}). 
+            Ini bukan kurs resmi BI untuk invoice. IDR sebagai ilustrasi; USD adalah sumber harga resmi.
+          </div>
+
+          {agent.stickerUsd && agent.stickerUsd > 0 && agent.bandHighUsd > agent.stickerUsd && (
             <div class="price-explainer">
               <strong>Kenapa beda?</strong> Harga sticker tidak termasuk biaya token tambahan, 
               overage, atau usage di atas kuota. Biaya nyata mencerminkan total cost of ownership 
