@@ -4,5 +4,5 @@ import { defineConfig } from 'astro/config';
 // https://astro.build/config
 export default defineConfig({
   output: 'static',
-  site: 'https://cost-of-agent.id',
+  site: 'https://cost-of-agent.rizafahmi.workers.dev',
 });
