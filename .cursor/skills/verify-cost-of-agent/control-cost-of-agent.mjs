@@ -254,10 +254,10 @@ async function cmdDoctor() {
       { encoding: 'utf8' }
     ).trim();
     const count = parseInt(indexFiles);
-    if (count === 13) {
-      console.log(`  ✓ Route count: ${count} (1 home + 12 agents)`);
+    if (count === 10) {
+      console.log(`  ✓ Route count: ${count} (1 home + 9 agents)`);
     } else {
-      console.log(`  ✗ FAIL: Expected 13 routes, found ${count}`);
+      console.log(`  ✗ FAIL: Expected 10 routes, found ${count}`);
       allPassed = false;
     }
   } catch (err) {

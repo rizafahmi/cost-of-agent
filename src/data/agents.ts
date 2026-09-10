@@ -259,87 +259,120 @@ export const agents: AgentCost[] = [
     effectivePerMTokUsd: 19
   },
   {
-    id: "aider",
-    name: "Aider",
-    vendor: "Aider (Open Source)",
-    category: "oss-byok",
-    billing: "token",
-    stickerUsd: 0,
+    id: "muse-code",
+    name: "Muse Code",
+    vendor: "Meta",
+    category: "cli",
+    billing: "seat",
+    stickerUsd: 5,
     bandLowUsd: 5,
-    bandHighUsd: 80,
+    bandHighUsd: 50,
     includes: [
-      "Open source (MIT license) - GRATIS untuk software",
-      "Git-aware AI coding",
-      "Pair programming di terminal",
-      "Mendukung 20+ providers (OpenAI, Anthropic, Google, DeepSeek, Ollama)",
-      "BYOK (Bring Your Own Key) - no subscription"
+      "Everyday / High / Power Usage tiers",
+      "Muse Spark included",
+      "Everyday: ~10–50 requests / 5h",
+      "High: 3× Everyday limits",
+      "Power: 10× Everyday limits",
+      "Voice input and web search capabilities",
+      "Subscription separate from pay-as-you-go Meta Model API"
     ],
     caveats: [
-      "BUKAN plan Aider - Aider tidak punya subscription atau coding plan",
-      "Biaya = API provider yang Anda pilih (OpenAI/Anthropic/dll)",
-      "Aider sendiri $0 selamanya, bayar token API saja",
-      "Estimasi $5-80/bulan tergantung model & usage intensity",
-      "Bisa $0 jika pakai local model (Ollama/vLLM)"
+      "Harga USD tidak tercetak di halaman subscriptions resmi — banyak sumber sekunder laporkan $5/$15/$50",
+      "Benefits & availability vary by region",
+      "Checkout Accounts Center adalah sumber kebenaran untuk harga final",
+      "Pay-as-you-go tetap ada via Meta Model API terpisah"
     ],
     sources: [
       {
-        label: "Aider Website",
-        url: "https://aider.chat/",
-        checkedAt: "2026-09-10"
-      },
-      {
-        label: "Aider GitHub",
-        url: "https://github.com/paul-gauthier/aider",
+        label: "Meta Muse Code Subscriptions",
+        url: "https://ai.developer.meta.com/docs/muse-code/subscriptions",
         checkedAt: "2026-09-10"
       }
     ],
     lastVerified: "2026-09-10",
-    assumptions: [
-      "BYOK pure token cost, no subscription markup",
-      "Estimasi moderate usage: 2M tokens/mo pada Sonnet 4.6",
-      "API direct: $3 input + $15 output (weighted avg ~$10/M)",
-      "Aider repo-map overhead: +20% token inflation",
-      "Effective: $10 × 1.2 = $12 per 1M token"
-    ],
-    confidence: "medium",
-    effectivePerMTokUsd: 12
+    confidence: "medium"
   },
   {
-    id: "continue",
-    name: "Continue (Acquired)",
-    vendor: "Continue → Cursor",
-    category: "oss-byok",
-    billing: "token",
-    stickerUsd: 0,
-    bandLowUsd: 0,
-    bandHighUsd: 0,
+    id: "glm-coding-plan",
+    name: "GLM Coding Plan",
+    vendor: "Z.ai",
+    category: "cli",
+    billing: "credits",
+    stickerUsd: 18,
+    bandLowUsd: 18,
+    bandHighUsd: 168,
     includes: [
-      "Acquired oleh Cursor (Juni 2026)",
-      "Codebase tetap tersedia (Apache 2.0, read-only)",
-      "Repository tidak lagi actively maintained",
-      "Final release: v2.0.0 (telemetry removed)"
+      "GLM-5.3 & Flash models",
+      "Lite: 2k credits/5h + 10k/week",
+      "Pro: 12k credits/5h + 60k/week",
+      "Max: 28k credits/5h + 140k/week",
+      "MCP tools support",
+      "Works with Claude Code/Cline/OpenCode and more"
     ],
     caveats: [
-      "Hosted service discontinued, OSS codebase remains available",
-      "Repository read-only, no official support/updates",
-      "Community dapat fork untuk custom development",
-      "Alternatif aktif: Cline (JetBrains), Cursor, Aider, atau BYOK tools lain",
-      "Band $0-0: tidak ada pricing untuk acquired/unmaintained product"
+      "List monthly $18/$80/$168; yearly ~30% off mungkin di checkout",
+      "Peak Mon–Fri 14:00–18:00 UTC+8 full rate, off-peak 50% discount",
+      "Bukan API pay-as-you-go umum — subscription plan terpisah"
     ],
     sources: [
       {
-        label: "Continue GitHub (read-only)",
-        url: "https://github.com/continuedev/continue",
+        label: "Z.ai Subscribe",
+        url: "https://z.ai/subscribe",
         checkedAt: "2026-09-10"
       },
       {
-        label: "Continue Homepage",
-        url: "https://continue.dev",
+        label: "Z.ai DevPack Overview",
+        url: "https://docs.z.ai/devpack/overview",
         checkedAt: "2026-09-10"
       }
     ],
     lastVerified: "2026-09-10",
     confidence: "high"
+  },
+  {
+    id: "byteplus-modelark-code",
+    name: "BytePlus ModelArk (Dola-Seed Code API)",
+    vendor: "BytePlus / ByteDance",
+    category: "cloud",
+    billing: "token",
+    bandLowUsd: 5,
+    bandHighUsd: 80,
+    includes: [
+      "Dola-Seed-2.0-Code API access",
+      "Input: $0.50 per 1M tokens",
+      "Output: $3.00 per 1M tokens",
+      "Pay-per-token API billing",
+      "Access via ModelArk platform"
+    ],
+    caveats: [
+      "API token bukan seat — pay-as-you-go billing",
+      "Ada ModelArk Coding Plan terpisah (Lite/Pro) di https://www.byteplus.com/en/activity/codingplan",
+      "Jangan campur dengan Trae IDE pricing",
+      "Region availability varies",
+      "Band estimate assumes blended 50/50 input/output usage"
+    ],
+    sources: [
+      {
+        label: "BytePlus ModelArk Product",
+        url: "https://www.byteplus.com/product/modelark",
+        checkedAt: "2026-09-10"
+      },
+      {
+        label: "BytePlus Coding Plan",
+        url: "https://www.byteplus.com/en/activity/codingplan",
+        checkedAt: "2026-09-10"
+      }
+    ],
+    lastVerified: "2026-09-10",
+    assumptions: [
+      "Blended rate assumption: 50% input ($0.50/M) + 50% output ($3.00/M)",
+      "Effective: ($0.50 + $3.00) / 2 = $1.75 per 1M tokens",
+      "Light usage: ~3M tokens/mo = $5.25",
+      "Heavy usage: ~45M tokens/mo = $78.75",
+      "Band $5-80 illustrates light to heavy API spend"
+    ],
+    confidence: "high",
+    effectivePerMTokUsd: 1.75
   },
   {
     id: "cursor-business",

@@ -70,7 +70,7 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs doctor
 # 1. Build artifacts exist (dist/index.html, dist/agen/, 12 agent dirs)
 # 2. Server responds (home 200, detail 200)
 # 3. Key content present (title, agent-card, Bahasa sections)
-# 4. Route count (13 total: 1 home + 12 agents)
+# 4. Route count (10 total: 1 home + 9 agents)
 # Exit code 0 = all passed, non-zero = failures
 ```
 
@@ -201,9 +201,9 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs order
 ```bash
 node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs check-home
 # Asserts:
-# - Agent count ~12
-# - First agent is "continue" (bandLowUsd: 0)
-# - Last agent is "devin" (bandLowUsd: 500)
+# - Agent count ~9
+# - First agent is "muse-code" (bandLowUsd: 5)
+# - Last agent is "cursor-business" (bandLowUsd: 40)
 # Exit code 0 = passed, non-zero = failed
 ```
 
