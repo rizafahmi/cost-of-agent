@@ -110,7 +110,7 @@ Contoh:
 
 ### Automatic Deployment (GitHub Actions)
 
-Setiap push atau merge ke branch `main` akan otomatis build dan deploy ke Cloudflare Pages melalui GitHub Actions.
+Setiap push atau merge ke branch `main` akan otomatis build dan deploy ke **Cloudflare Workers (static assets)** melalui GitHub Actions.
 
 **Setup sekali jalan:**
 
@@ -118,7 +118,7 @@ Setiap push atau merge ke branch `main` akan otomatis build dan deploy ke Cloudf
    - Login ke [Cloudflare Dashboard](https://dash.cloudflare.com/)
    - Pergi ke **My Profile** → **API Tokens** → **Create Token**
    - Gunakan template **Edit Cloudflare Workers** atau buat custom token dengan permissions:
-     - Account: Cloudflare Pages (Edit)
+     - Account: Cloudflare Workers Scripts (Edit)
      - Account: Account Settings (Read)
    - Copy token yang dihasilkan
 
@@ -126,40 +126,37 @@ Setiap push atau merge ke branch `main` akan otomatis build dan deploy ke Cloudf
    - Di [Cloudflare Dashboard](https://dash.cloudflare.com/), pilih account Anda
    - Account ID terlihat di sidebar kanan atau di URL
 
-3. **Dapatkan Project Name:**
-   - Project name adalah nama Cloudflare Pages project (biasanya: `cost-of-agent`)
-   - Cek di **Workers & Pages** untuk nama project yang sudah ada atau yang akan digunakan
-   - **Catatan:** Project name bukan secret — bisa disimpan sebagai repository variable atau menggunakan default `cost-of-agent`
-
-4. **Tambahkan GitHub Secrets:**
+3. **Tambahkan GitHub Secrets:**
    - Buka repository: [https://github.com/rizafahmi/cost-of-agent/settings/secrets/actions](https://github.com/rizafahmi/cost-of-agent/settings/secrets/actions)
    - Klik **New repository secret** dan tambahkan **dua secret berikut (sebagai Repository secrets, BUKAN Environment secrets):**
      - `CLOUDFLARE_API_TOKEN` → token dari langkah 1
      - `CLOUDFLARE_ACCOUNT_ID` → account ID dari langkah 2
-   - (Opsional) Untuk custom project name, tambahkan repository variable `CLOUDFLARE_PROJECT_NAME` di [Settings → Variables → Actions](https://github.com/rizafahmi/cost-of-agent/settings/variables/actions)
-   - Workflow akan menggunakan `cost-of-agent` sebagai default jika variable tidak diset
 
-5. **Done!** Setiap merge ke `main` akan otomatis deploy ke live URL.
+4. **Done!** Setiap merge ke `main` akan otomatis deploy ke live URL.
+
+**Catatan Teknis:**
+- Project ini deploy sebagai **Cloudflare Worker dengan static assets**, bukan Cloudflare Pages
+- Worker project name: `cost-of-agent` (dikonfigurasi di `wrangler.toml`)
+- Astro build output (`dist/`) di-serve sebagai static assets oleh Worker
 
 **Workflow file:** `.github/workflows/deploy-cloudflare.yml`
 
-### Manual Deployment (Dashboard)
+### Manual Deployment (CLI)
 
-Alternatif untuk deploy manual via Cloudflare Dashboard:
+Untuk deploy manual menggunakan Wrangler CLI:
 
-1. Login ke [Cloudflare Dashboard](https://dash.cloudflare.com/)
-2. Pilih **Workers & Pages** → **Create application** → **Pages** → **Connect to Git**
-3. Pilih repository: `rizafahmi/cost-of-agent`
-4. **Build settings:**
-   - Framework preset: **Astro** (atau **None** jika tidak tersedia)
-   - Build command: `pnpm build`
-   - Build output directory: `dist`
-   - Node.js version: **22** atau lebih tinggi (jika diminta di Environment variables, set `NODE_VERSION=22`)
-5. Klik **Save and Deploy**
+```bash
+# Install wrangler globally (opsional)
+npm install -g wrangler
 
-**Custom domain:** Situs saat ini menggunakan domain workers.dev default. Untuk menggunakan custom domain seperti `cost-of-agent.id`, tambahkan custom domain di Cloudflare Pages settings dan update field `site` di `astro.config.mjs` setelah domain terbukti berfungsi.
+# Build site
+pnpm build
 
-**Catatan:** Deploy ini untuk situs statis murni. Tidak memerlukan Wrangler CLI atau konfigurasi tambahan — cukup connect via dashboard Cloudflare Pages.
+# Deploy to Cloudflare Workers
+npx wrangler deploy
+```
+
+Pastikan environment variables `CLOUDFLARE_API_TOKEN` dan `CLOUDFLARE_ACCOUNT_ID` sudah ter-set, atau login dengan `wrangler login`.
 
 ## Kontribusi
 
