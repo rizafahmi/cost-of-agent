@@ -106,6 +106,26 @@ Contoh:
 }
 ```
 
+## Deploy
+
+### Cloudflare Pages
+
+Cara deploy ke Cloudflare Pages:
+
+1. Login ke [Cloudflare Dashboard](https://dash.cloudflare.com/)
+2. Pilih **Workers & Pages** → **Create application** → **Pages** → **Connect to Git**
+3. Pilih repository: `rizafahmi/cost-of-agent`
+4. **Build settings:**
+   - Framework preset: **Astro** (atau **None** jika tidak tersedia)
+   - Build command: `pnpm build`
+   - Build output directory: `dist`
+   - Node.js version: **22** atau lebih tinggi (jika diminta di Environment variables, set `NODE_VERSION=22`)
+5. Klik **Save and Deploy**
+
+**Custom domain:** Untuk menggunakan domain `cost-of-agent.id`, tambahkan custom domain di Cloudflare Pages settings. Pastikan field `site` di `astro.config.mjs` sesuai dengan domain yang digunakan.
+
+**Catatan:** Deploy ini untuk situs statis murni. Tidak memerlukan Wrangler CLI atau konfigurasi tambahan — cukup connect via dashboard Cloudflare Pages.
+
 ## Kontribusi
 
 Pull requests welcome! Pastikan:
