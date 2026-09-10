@@ -74,6 +74,23 @@ const billingLabels = {
         margin: 0 auto;
       }
 
+      .warning-banner {
+        background: #fff8c5;
+        border-left: 4px solid #f0ad4e;
+        padding: 1rem 1.5rem;
+        border-radius: 6px;
+        margin: 2rem auto;
+        max-width: 800px;
+        font-size: 0.9375rem;
+        line-height: 1.5;
+      }
+
+      .warning-banner strong {
+        color: #7d4e00;
+        display: block;
+        margin-bottom: 0.25rem;
+      }
+
       .agent-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -164,6 +181,28 @@ const billingLabels = {
         margin-top: 0.25rem;
       }
 
+      .effective-metric {
+        font-size: 0.875rem;
+        color: #0969da;
+        margin-top: 0.75rem;
+        padding-top: 0.75rem;
+        border-top: 1px dashed #d0d7de;
+      }
+
+      .effective-metric strong {
+        font-weight: 600;
+      }
+
+      .effective-caveat {
+        font-size: 0.75rem;
+        color: #7d4e00;
+        background: #fff8c5;
+        padding: 0.5rem;
+        border-radius: 4px;
+        margin-top: 0.5rem;
+        line-height: 1.4;
+      }
+
       footer {
         text-align: center;
         padding: 2rem 0;
@@ -199,6 +238,12 @@ const billingLabels = {
         <p class="subtitle">
           Direktori biaya nyata agen coding AI — harga bulanan (seat + token + overage), bukan cuma sticker.
         </p>
+        
+        <div class="warning-banner">
+          <strong>⚠ Tentang Metrik Efektif</strong>
+          Harga per 1M token adalah <em>floor price</em> (lantai harga) berdasarkan asumsi penggunaan jenuh/maksimal — bukan tagihan tipikal Anda. 
+          Tagihan nyata bervariasi tergantung pola usage. Lihat detail agen untuk asumsi lengkap dan tingkat kepercayaan data.
+        </div>
       </header>
 
       <main>
@@ -228,6 +273,17 @@ const billingLabels = {
                   )}
                 </div>
                 <div class="price-label">biaya nyata per bulan</div>
+                
+                {agent.effectivePerMTokUsd && (
+                  <div class="effective-metric">
+                    <strong>{formatUSD(agent.effectivePerMTokUsd)}</strong> per 1M token
+                  </div>
+                )}
+                {!agent.effectivePerMTokUsd && agent.assumptions && (
+                  <div class="effective-metric" style="color: #57606a; font-style: italic;">
+                    estimasi belum dihitung
+                  </div>
+                )}
               </div>
             </a>
           ))}

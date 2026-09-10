@@ -12,6 +12,9 @@ export type AgentCost = {
   caveats: string[];
   sources: { label: string; url: string; checkedAt: string }[];
   lastVerified: string;
+  assumptions?: string[];
+  confidence?: "high" | "medium" | "low";
+  effectivePerMTokUsd?: number;
 };
 
 export const agents: AgentCost[] = [
@@ -42,7 +45,14 @@ export const agents: AgentCost[] = [
         checkedAt: "2026-09-09"
       }
     ],
-    lastVerified: "2026-09-09"
+    lastVerified: "2026-09-09",
+    assumptions: [
+      "Usage power user: 2000 fast completions per bulan",
+      "Asumsi overage $0.75 per 1000 requests di atas 500 kuota",
+      "Hitung dasar $20 + (1500 overage × $0.75/1000) = ~$21-60"
+    ],
+    confidence: "high",
+    effectivePerMTokUsd: 15
   },
   {
     id: "github-copilot-individual",
@@ -71,7 +81,14 @@ export const agents: AgentCost[] = [
         checkedAt: "2026-09-09"
       }
     ],
-    lastVerified: "2026-09-09"
+    lastVerified: "2026-09-09",
+    assumptions: [
+      "Flat seat pricing tanpa overage untuk usage normal",
+      "Workspace features dapat tambah $5/bulan jika diaktifkan intensif",
+      "Estimasi untuk penggunaan standar IDE + chat"
+    ],
+    confidence: "high",
+    effectivePerMTokUsd: 12
   },
   {
     id: "github-copilot-business",
@@ -100,7 +117,14 @@ export const agents: AgentCost[] = [
         checkedAt: "2026-09-09"
       }
     ],
-    lastVerified: "2026-09-09"
+    lastVerified: "2026-09-09",
+    assumptions: [
+      "Flat seat pricing $19/bulan per developer",
+      "Extended context dan workspace dapat tambah $5-11/seat",
+      "Estimasi untuk tim dengan moderate agentic usage"
+    ],
+    confidence: "high",
+    effectivePerMTokUsd: 14
   },
   {
     id: "windsurf-pro",
@@ -129,7 +153,14 @@ export const agents: AgentCost[] = [
         checkedAt: "2026-09-09"
       }
     ],
-    lastVerified: "2026-09-09"
+    lastVerified: "2026-09-09",
+    assumptions: [
+      "Penggunaan Cascade mode 50-100 flows per bulan",
+      "Overage credit tidak dipublikasikan, estimasi berdasarkan pola serupa",
+      "Band tinggi untuk power user dengan AI flows intensif"
+    ],
+    confidence: "medium",
+    effectivePerMTokUsd: 18
   },
   {
     id: "claude-code-cli",
@@ -158,7 +189,14 @@ export const agents: AgentCost[] = [
         checkedAt: "2026-09-09"
       }
     ],
-    lastVerified: "2026-09-09"
+    lastVerified: "2026-09-09",
+    assumptions: [
+      "Claude Sonnet 3.5: $3/MTok input, $15/MTok output (per Anthropic API pricing)",
+      "Usage 3-30M tokens input + 0.5-5M output per bulan",
+      "Pure token consumption, tidak ada seat fee"
+    ],
+    confidence: "high",
+    effectivePerMTokUsd: 3
   },
   {
     id: "aider",
@@ -191,7 +229,14 @@ export const agents: AgentCost[] = [
         checkedAt: "2026-09-09"
       }
     ],
-    lastVerified: "2026-09-09"
+    lastVerified: "2026-09-09",
+    assumptions: [
+      "BYOK: biaya = token provider (GPT-4o, Claude, dll)",
+      "GPT-4o Turbo ~$2.50/MTok input, $10/MTok output",
+      "Usage 2-25M tokens input + 0.5-3M output per bulan"
+    ],
+    confidence: "medium",
+    effectivePerMTokUsd: 2.5
   },
   {
     id: "continue",
@@ -225,7 +270,14 @@ export const agents: AgentCost[] = [
         checkedAt: "2026-09-09"
       }
     ],
-    lastVerified: "2026-09-09"
+    lastVerified: "2026-09-09",
+    assumptions: [
+      "BYOK: biaya = token provider pilihan atau $0 untuk local model",
+      "Jika GPT-4: ~$2.50/MTok input, $10/MTok output",
+      "Usage 0-15M tokens per bulan, atau $0 dengan Llama/Mistral lokal"
+    ],
+    confidence: "medium",
+    effectivePerMTokUsd: 2.5
   },
   {
     id: "devin",
@@ -254,7 +306,13 @@ export const agents: AgentCost[] = [
         checkedAt: "2026-09-09"
       }
     ],
-    lastVerified: "2026-09-09"
+    lastVerified: "2026-09-09",
+    assumptions: [
+      "Flat $500/seat per bulan, tidak ada public detail overage",
+      "Estimasi untuk usage normal autonomous agent (early access pricing)",
+      "Pricing bisa berubah saat keluar dari beta"
+    ],
+    confidence: "low"
   },
   {
     id: "cursor-business",
@@ -284,6 +342,13 @@ export const agents: AgentCost[] = [
         checkedAt: "2026-09-09"
       }
     ],
-    lastVerified: "2026-09-09"
+    lastVerified: "2026-09-09",
+    assumptions: [
+      "Usage power user: 3000-4000 fast completions per bulan",
+      "Asumsi overage $0.75 per 1000 requests di atas 1000 kuota",
+      "Hitung dasar $40 + (2000-3000 overage × $0.75/1000) = ~$40-100"
+    ],
+    confidence: "high",
+    effectivePerMTokUsd: 18
   }
 ];
