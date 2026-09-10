@@ -201,7 +201,7 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs order
 ```bash
 node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs check-home
 # Asserts:
-# - Agent count ~12
+# - Agent count ~9
 # - First agent is "continue" (bandLowUsd: 0)
 # - Last agent is "devin" (bandLowUsd: 500)
 # Exit code 0 = passed, non-zero = failed
@@ -278,7 +278,7 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs smoke
 See [`references/features/`](references/features/) for detailed feature breakdown and CLI-driven verification instructions.
 
 Key features:
-- [Home Agent List](references/features/home-agent-list.md) — 12 cost-sorted cards
+- [Home Agent List](references/features/home-agent-list.md) — 9 cost-sorted cards
 - [Agent Detail Page](references/features/agent-detail-page.md) — Pricing, includes, caveats (Bahasa)
 - [Navigation Flow](references/features/navigation-flow.md) — Home ↔ detail via cards/back links
-- [Static Build Routes](references/features/static-build-routes.md) — 13 pre-rendered routes
+- [Static Build Routes](references/features/static-build-routes.md) — 10 pre-rendered routes
