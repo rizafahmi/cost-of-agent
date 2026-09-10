@@ -14,6 +14,16 @@ const formatUSD = (amount: number) => {
   }).format(amount);
 };
 
+// Helper to format per-token pricing (allows fractional cents)
+const formatPerTokenUSD = (amount: number) => {
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2
+  }).format(amount);
+};
+
 const categoryLabels = {
   ide: 'IDE',
   cli: 'CLI',
@@ -276,7 +286,7 @@ const billingLabels = {
                 
                 {agent.effectivePerMTokUsd && (
                   <div class="effective-metric">
-                    <strong>{formatUSD(agent.effectivePerMTokUsd)}</strong> per 1M token
+                    <strong>{formatPerTokenUSD(agent.effectivePerMTokUsd)}</strong> per 1M token
                   </div>
                 )}
                 {!agent.effectivePerMTokUsd && agent.assumptions && (
