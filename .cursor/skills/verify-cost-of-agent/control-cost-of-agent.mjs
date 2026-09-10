@@ -161,10 +161,10 @@ async function cmdDoctor() {
   try {
     const agenDirs = execSync(`ls -1 "${join(DIST_DIR, 'agen')}" 2>/dev/null | wc -l`, { encoding: 'utf8' }).trim();
     const count = parseInt(agenDirs);
-    if (count === 12) {
+    if (count === 9) {
       console.log(`  ✓ Agent directories count: ${count}`);
     } else {
-      console.log(`  ✗ FAIL: Expected 12 agent directories, found ${count}`);
+      console.log(`  ✗ FAIL: Expected 9 agent directories, found ${count}`);
       allPassed = false;
     }
   } catch {
@@ -254,10 +254,10 @@ async function cmdDoctor() {
       { encoding: 'utf8' }
     ).trim();
     const count = parseInt(indexFiles);
-    if (count === 13) {
-      console.log(`  ✓ Route count: ${count} (1 home + 12 agents)`);
+    if (count === 10) {
+      console.log(`  ✓ Route count: ${count} (1 home + 9 agents)`);
     } else {
-      console.log(`  ✗ FAIL: Expected 13 routes, found ${count}`);
+      console.log(`  ✗ FAIL: Expected 10 routes, found ${count}`);
       allPassed = false;
     }
   } catch (err) {
@@ -482,10 +482,10 @@ async function cmdCheckHome() {
     let allPassed = true;
     
     // Check count
-    if (ids.length >= 10 && ids.length <= 15) {
+    if (ids.length >= 8 && ids.length <= 12) {
       console.log(`✓ Agent count: ${ids.length} (reasonable range)`);
     } else {
-      console.log(`✗ FAIL: Expected ~12 agents, found ${ids.length}`);
+      console.log(`✗ FAIL: Expected ~9 agents, found ${ids.length}`);
       allPassed = false;
     }
     
@@ -766,7 +766,7 @@ async function cmdSmoke() {
         ids.push(match[1]);
       }
       
-      if (ids.length >= 10 && ids[0] === 'continue' && ids[ids.length - 1] === 'devin') {
+      if (ids.length >= 8 && ids[0] === 'continue' && ids[ids.length - 1] === 'devin') {
         console.log(`  ✓ Home page structure valid (${ids.length} agents, correct order)`);
       } else {
         console.log(`  ✗ Home page structure invalid`);

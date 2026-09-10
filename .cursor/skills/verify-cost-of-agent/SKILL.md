@@ -15,7 +15,7 @@ Systematic verification for the Cost-of-Agent static site — a Bahasa Indonesia
 
 **Tech stack:** Astro 7.x + TypeScript, static site generator (`output: 'static'`)
 
-**Data source:** `src/data/agents.ts` (typed array of 12 agents)
+**Data source:** `src/data/agents.ts` (typed array of 9 agents)
 
 **Key features:**
 - Agent cards showing name, vendor, category, billing type, price band
@@ -67,10 +67,10 @@ Run diagnostics after launch to verify build artifacts, server response, content
 ```bash
 node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs doctor
 # Checks:
-# 1. Build artifacts exist (dist/index.html, dist/agen/, 12 agent dirs)
+# 1. Build artifacts exist (dist/index.html, dist/agen/, 9 agent dirs)
 # 2. Server responds (home 200, detail 200)
 # 3. Key content present (title, agent-card, Bahasa sections)
-# 4. Route count (13 total: 1 home + 12 agents)
+# 4. Route count (10 total: 1 home + 9 agents)
 # Exit code 0 = all passed, non-zero = failures
 ```
 
@@ -105,9 +105,9 @@ await page.goto('http://127.0.0.1:4323/');
 const title = await page.$eval('h1', el => el.textContent);
 assert(title.includes('Cost of Agent'));
 
-// Count agent cards (should be 12)
+// Count agent cards (should be 9)
 const cardCount = await page.$$eval('a.agent-card', cards => cards.length);
-assert(cardCount === 12);
+assert(cardCount === 9);
 
 // Click first card (Continue - lowest bandLowUsd)
 const firstCardHref = await page.$eval('a.agent-card', el => el.href);
@@ -128,7 +128,7 @@ await page.screenshot({ path: '/workspace/.cursor/skills/verify-cost-of-agent/ev
 # Extract agent IDs from href attributes in order
 curl -s http://127.0.0.1:4323/ | \
   grep -oP 'href="/agen/\K[^/]+' | \
-  head -12
+  head -9
 # First should be "continue" (bandLowUsd: 0)
 # Last should be "devin" (bandLowUsd: 500)
 ```
@@ -201,7 +201,7 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs order
 ```bash
 node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs check-home
 # Asserts:
-# - Agent count ~12
+# - Agent count ~9
 # - First agent is "continue" (bandLowUsd: 0)
 # - Last agent is "devin" (bandLowUsd: 500)
 # Exit code 0 = passed, non-zero = failed
@@ -261,9 +261,9 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs smoke
 
 2. **Price formatting:** Prices are formatted with `Intl.NumberFormat` using `id-ID` locale, producing `US$` prefix. Example: `US$20` not `$20` or `USD 20`.
 
-3. **Zero-cost agents:** Three agents have `bandLowUsd: 0` (Continue, Codeium Free, Cursor Hobby). These render as `US$0` or `US$0 – US$50`. Check for both flat and range display.
+3. **Zero-cost agents:** One agent has `bandLowUsd: 0` (Continue). It renders as `US$0 – US$50` (range). Aider is also very low at $5.
 
-4. **Missing sticker:** Not all agents have `stickerUsd`. Only render sticker price if present. Example: Continue has no sticker, only band.
+4. **Missing sticker:** Not all agents have `stickerUsd`. Only 7 of 9 have it defined. Continue and Aider (first two by cost) have no sticker — show only band.
 
 5. **Bahasa copy:** All user-facing text is in Bahasa Indonesia. Headings like "Yang Termasuk", "Catatan Penting", "Sumber Data". Don't assert English headings.
 
@@ -278,7 +278,7 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs smoke
 See [`references/features/`](references/features/) for detailed feature breakdown and CLI-driven verification instructions.
 
 Key features:
-- [Home Agent List](references/features/home-agent-list.md) — 12 cost-sorted cards
+- [Home Agent List](references/features/home-agent-list.md) — 9 cost-sorted cards
 - [Agent Detail Page](references/features/agent-detail-page.md) — Pricing, includes, caveats (Bahasa)
 - [Navigation Flow](references/features/navigation-flow.md) — Home ↔ detail via cards/back links
-- [Static Build Routes](references/features/static-build-routes.md) — 13 pre-rendered routes
+- [Static Build Routes](references/features/static-build-routes.md) — 10 pre-rendered routes

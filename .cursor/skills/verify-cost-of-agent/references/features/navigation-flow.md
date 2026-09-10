@@ -88,9 +88,9 @@ echo "$HOME_HTML" | grep -q 'href="/agen/cursor-pro/"' && \
 
 Or use order command to verify all hrefs:
 ```bash
-# Order command extracts hrefs, verifies all 12 agent links present
+# Order command extracts hrefs, verifies all 9 agent links present
 node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs order
-# Output: 12 agent IDs means 12 working links
+# Output: 9 agent IDs means 9 working links
 ```
 
 ### Verify detail links back to home
