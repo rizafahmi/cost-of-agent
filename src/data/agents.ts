@@ -12,6 +12,9 @@ export type AgentCost = {
   caveats: string[];
   sources: { label: string; url: string; checkedAt: string }[];
   lastVerified: string;
+  assumptions?: string[];
+  confidence?: "high" | "medium" | "low";
+  effectivePerMTokUsd?: number;
 };
 
 // USD to IDR exchange rate (mid-market, approximate)
@@ -56,7 +59,16 @@ export const agents: AgentCost[] = [
         checkedAt: "2026-09-10"
       }
     ],
-    lastVerified: "2026-09-10"
+    lastVerified: "2026-09-10",
+    assumptions: [
+      "Usage Pro baseline: included usage pools habis, mulai on-demand",
+      "Other Models usage: ~500K tokens/bulan di Claude Sonnet 4.6 ($3/$15 per M)",
+      "Estimasi token cost: (250K input × $3) + (250K output × $15) = $4.50/mo",
+      "Total Pro + token overage: $20 + $4.50 = ~$24.50",
+      "Floor price: $24.50 / 0.5M tokens = $49 per 1M token"
+    ],
+    confidence: "medium",
+    effectivePerMTokUsd: 49
   },
   {
     id: "github-copilot-pro",
@@ -92,7 +104,16 @@ export const agents: AgentCost[] = [
         checkedAt: "2026-09-10"
       }
     ],
-    lastVerified: "2026-09-10"
+    lastVerified: "2026-09-10",
+    assumptions: [
+      "Pro baseline: 1,500 AI credits included ($15 value)",
+      "Heavy usage: habis 1,500 credits + tambahan 2,000 credits ($20)",
+      "Total: $10 seat + $20 overage = $30",
+      "Token estimate: 2M-3M tokens untuk chat/review intensive",
+      "Floor price: $30 / 2.5M tokens = $12 per 1M token"
+    ],
+    confidence: "medium",
+    effectivePerMTokUsd: 12
   },
   {
     id: "github-copilot-business",
@@ -129,30 +150,41 @@ export const agents: AgentCost[] = [
         checkedAt: "2026-09-10"
       }
     ],
-    lastVerified: "2026-09-10"
+    lastVerified: "2026-09-10",
+    assumptions: [
+      "Business seat: 1,900 credits included ($19 value)",
+      "Power user: habis pool + 2,500 credits overage ($25)",
+      "Total per seat: $19 + $25 = $44",
+      "Token estimate: ~3M tokens untuk heavy org usage",
+      "Floor price: $44 / 3M tokens = ~$14.67 per 1M token"
+    ],
+    confidence: "medium",
+    effectivePerMTokUsd: 14.67
   },
   {
-    id: "devin-desktop-pro",
-    name: "Devin Desktop Pro",
-    vendor: "Cognition (Windsurf)",
+    id: "devin-pro",
+    name: "Devin Pro (Desktop + Cloud)",
+    vendor: "Cognition",
     category: "ide",
     billing: "hybrid",
     stickerUsd: 20,
     bandLowUsd: 20,
-    bandHighUsd: 50,
+    bandHighUsd: 200,
     includes: [
+      "Devin Desktop IDE (formerly Windsurf)",
+      "Devin Cloud autonomous agents",
       "Increased daily and weekly quotas",
       "Full model access (OpenAI, Claude, Gemini)",
       "Free SWE 1.7 dan open source models",
-      "Devin Cloud agents included",
       "Unlimited Tab completions",
       "Extra usage at API pricing"
     ],
     caveats: [
-      "Windsurf acquired oleh Cognition (Juli 2025), rebranded ke Devin Desktop (Juni 2026)",
-      "Pricing unchanged: Free $0, Pro $20, Max $200, Teams $80+$40/seat",
+      "SATU plan family mencakup Desktop IDE + Cloud agents",
+      "Tiers: Free $0, Pro $20, Max $200, Teams $80+$40/seat",
+      "Windsurf acquired Juli 2025, rebranded Devin Desktop Juni 2026",
       "Quota tidak dipublikasikan dalam angka eksplisit",
-      "Heavy usage dapat memicu on-demand billing di atas sticker"
+      "Heavy autonomous usage dapat memicu on-demand billing"
     ],
     sources: [
       {
@@ -164,9 +196,21 @@ export const agents: AgentCost[] = [
         label: "Cognition Windsurf Acquisition",
         url: "https://cognition.com/blog/windsurf",
         checkedAt: "2026-09-10"
+      },
+      {
+        label: "Cognition New Self-Serve Plans",
+        url: "https://cognition.com/blog/new-self-serve-plans-for-devin",
+        checkedAt: "2026-09-10"
       }
     ],
-    lastVerified: "2026-09-10"
+    lastVerified: "2026-09-10",
+    assumptions: [
+      "Pro baseline $20 dengan quota tidak dipublikasi",
+      "Autonomous agent usage sulit diestimasi tanpa token economics publik",
+      "Public pricing tidak expose per-token cost",
+      "Band $20-200 mencerminkan Pro-Max spectrum"
+    ],
+    confidence: "low"
   },
   {
     id: "claude-code-cli",
@@ -203,7 +247,16 @@ export const agents: AgentCost[] = [
         checkedAt: "2026-09-10"
       }
     ],
-    lastVerified: "2026-09-10"
+    lastVerified: "2026-09-10",
+    assumptions: [
+      "Claude Pro $20: usage pool shared web+CLI",
+      "Heavy CLI coding: melebihi included, trigger paid credits",
+      "API rates: Sonnet 4.6 $3/$15 per M tokens",
+      "Estimasi: 2M tokens/mo mixed input/output = ~$18 token cost",
+      "Total: $20 seat + $18 credits = $38 / 2M = $19 per 1M token"
+    ],
+    confidence: "medium",
+    effectivePerMTokUsd: 19
   },
   {
     id: "aider",
@@ -240,11 +293,20 @@ export const agents: AgentCost[] = [
         checkedAt: "2026-09-10"
       }
     ],
-    lastVerified: "2026-09-10"
+    lastVerified: "2026-09-10",
+    assumptions: [
+      "BYOK pure token cost, no subscription markup",
+      "Estimasi moderate usage: 2M tokens/mo pada Sonnet 4.6",
+      "API direct: $3 input + $15 output (weighted avg ~$10/M)",
+      "Aider repo-map overhead: +20% token inflation",
+      "Effective: $10 × 1.2 = $12 per 1M token"
+    ],
+    confidence: "medium",
+    effectivePerMTokUsd: 12
   },
   {
     id: "continue",
-    name: "Continue (Discontinued)",
+    name: "Continue (Acquired)",
     vendor: "Continue → Cursor",
     category: "oss-byok",
     billing: "token",
@@ -252,17 +314,17 @@ export const agents: AgentCost[] = [
     bandLowUsd: 0,
     bandHighUsd: 0,
     includes: [
-      "Acquired oleh Cursor (Juni 2026), product discontinued",
+      "Acquired oleh Cursor (Juni 2026)",
       "Codebase tetap tersedia (Apache 2.0, read-only)",
-      "Repository tidak lagi maintained",
+      "Repository tidak lagi actively maintained",
       "Final release: v2.0.0 (telemetry removed)"
     ],
     caveats: [
-      "PRODUCT TIDAK LAGI TERSEDIA untuk adopsi baru",
-      "Cloud data deleted setelah July 15, 2026",
-      "Community dapat fork codebase, tapi tanpa dukungan resmi",
-      "Alternatif: Cline (untuk JetBrains), Cursor, atau tools BYOK lain",
-      "Band $0-0 karena tidak ada pricing - product sudah shutdown"
+      "Hosted service discontinued, OSS codebase remains available",
+      "Repository read-only, no official support/updates",
+      "Community dapat fork untuk custom development",
+      "Alternatif aktif: Cline (JetBrains), Cursor, Aider, atau BYOK tools lain",
+      "Band $0-0: tidak ada pricing untuk acquired/unmaintained product"
     ],
     sources: [
       {
@@ -271,50 +333,13 @@ export const agents: AgentCost[] = [
         checkedAt: "2026-09-10"
       },
       {
-        label: "Cursor acquires Continue (TechCrunch)",
-        url: "https://thenewstack.io/cursor-acquires-continue-coding/",
+        label: "Continue Homepage",
+        url: "https://continue.dev",
         checkedAt: "2026-09-10"
       }
     ],
-    lastVerified: "2026-09-10"
-  },
-  {
-    id: "devin-cloud-pro",
-    name: "Devin Cloud Pro",
-    vendor: "Cognition AI",
-    category: "cloud",
-    billing: "hybrid",
-    stickerUsd: 20,
-    bandLowUsd: 20,
-    bandHighUsd: 200,
-    includes: [
-      "Autonomous AI software engineer",
-      "Cloud workspace dengan VM dedicated",
-      "Plan, code, test, deploy autonomously",
-      "Daily and weekly usage quota",
-      "Slack & Linear integration",
-      "On-demand credits untuk extra usage"
-    ],
-    caveats: [
-      "Pro $20/mo adalah baseline; Max $200/mo untuk power users",
-      "Teams: $80/mo + $40/full seat (unlimited members)",
-      "Quota tidak dipublikasikan dalam angka numerik eksplisit",
-      "Usage di atas quota: on-demand credits at API pricing",
-      "Band $20-200 mencerminkan Pro hingga Max tier untuk autonomous usage"
-    ],
-    sources: [
-      {
-        label: "Devin Pricing",
-        url: "https://devin.ai/pricing",
-        checkedAt: "2026-09-10"
-      },
-      {
-        label: "Cognition New Self-Serve Plans",
-        url: "https://cognition.com/blog/new-self-serve-plans-for-devin",
-        checkedAt: "2026-09-10"
-      }
-    ],
-    lastVerified: "2026-09-10"
+    lastVerified: "2026-09-10",
+    confidence: "high"
   },
   {
     id: "cursor-business",
@@ -354,6 +379,15 @@ export const agents: AgentCost[] = [
         checkedAt: "2026-09-10"
       }
     ],
-    lastVerified: "2026-09-10"
+    lastVerified: "2026-09-10",
+    assumptions: [
+      "Teams Standard seat: $40 baseline + on-demand usage",
+      "Additional Cursor Token Rate: $0.25/M on third-party models",
+      "Estimasi heavy user: 1M tokens/mo third-party overage",
+      "Total: $40 seat + ($10 API cost + $0.25 token rate) = $50.25",
+      "Floor price: $50.25 / 1M = ~$50 per 1M token"
+    ],
+    confidence: "medium",
+    effectivePerMTokUsd: 50
   }
 ];
