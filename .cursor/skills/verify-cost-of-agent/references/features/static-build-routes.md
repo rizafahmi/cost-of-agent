@@ -107,7 +107,7 @@ Doctor includes route count check:
 # Check expected agent routes exist
 for agent_id in cursor-pro github-copilot-individual github-copilot-business \
                 windsurf-pro claude-code-cli aider continue devin \
-                cursor-business codeium-free cursor-hobby openai-chatgpt-plus; do
+                cursor-business; do
   [ -f "dist/agen/$agent_id/index.html" ] && \
     echo "✓ /agen/$agent_id/" || echo "✗ Missing: /agen/$agent_id/"
 done
