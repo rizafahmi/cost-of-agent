@@ -1,5 +1,5 @@
 ---
-import { agents } from '../data/agents';
+import { agents, USD_IDR, kursCheckedAt } from '../data/agents';
 
 // Sort by bandLowUsd ascending
 const sortedAgents = [...agents].sort((a, b) => a.bandLowUsd - b.bandLowUsd);
@@ -23,6 +23,17 @@ const formatPerTokenUSD = (amount: number) => {
     maximumFractionDigits: 2
   }).format(amount);
 };
+
+const formatIDR = (amount: number) => {
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(amount);
+};
+
+const usdToIdr = (usd: number) => usd * USD_IDR;
 
 const categoryLabels = {
   ide: 'IDE',
@@ -82,23 +93,6 @@ const billingLabels = {
         color: #57606a;
         max-width: 600px;
         margin: 0 auto;
-      }
-
-      .warning-banner {
-        background: #fff8c5;
-        border-left: 4px solid #f0ad4e;
-        padding: 1rem 1.5rem;
-        border-radius: 6px;
-        margin: 2rem auto;
-        max-width: 800px;
-        font-size: 0.9375rem;
-        line-height: 1.5;
-      }
-
-      .warning-banner strong {
-        color: #7d4e00;
-        display: block;
-        margin-bottom: 0.25rem;
       }
 
       .agent-grid {
@@ -191,26 +185,52 @@ const billingLabels = {
         margin-top: 0.25rem;
       }
 
+      .price-idr {
+        font-size: 0.875rem;
+        color: #6e7781;
+        margin-top: 0.25rem;
+      }
+
       .effective-metric {
         font-size: 0.875rem;
         color: #0969da;
         margin-top: 0.75rem;
         padding-top: 0.75rem;
         border-top: 1px dashed #d0d7de;
+        font-weight: 500;
       }
 
       .effective-metric strong {
-        font-weight: 600;
+        font-weight: 700;
       }
 
-      .effective-caveat {
-        font-size: 0.75rem;
-        color: #7d4e00;
+      .kurs-disclaimer {
         background: #fff8c5;
-        padding: 0.5rem;
+        border-left: 4px solid #f0ad4e;
+        padding: 1rem;
+        margin: 2rem 0;
         border-radius: 4px;
-        margin-top: 0.5rem;
-        line-height: 1.4;
+        font-size: 0.875rem;
+        color: #7d4e00;
+      }
+
+      .effective-banner {
+        background: #fff8c5;
+        border-left: 4px solid #f0ad4e;
+        padding: 1rem;
+        margin: 1rem 0 2rem 0;
+        border-radius: 4px;
+        font-size: 0.875rem;
+        color: #7d4e00;
+        line-height: 1.6;
+      }
+
+      .effective-banner strong {
+        font-weight: 700;
+      }
+
+      .effective-banner em {
+        font-style: italic;
       }
 
       footer {
@@ -248,15 +268,20 @@ const billingLabels = {
         <p class="subtitle">
           Direktori biaya nyata agen coding AI — harga bulanan (seat + token + overage), bukan cuma sticker.
         </p>
-        
-        <div class="warning-banner">
+      </header>
+
+      <main>
+        <div class="kurs-disclaimer">
+          <strong>Catatan Kurs:</strong> Harga IDR dihitung dari USD dengan kurs mid-market ~{USD_IDR.toLocaleString('id-ID')} (dicek {kursCheckedAt}). 
+          Ini bukan kurs resmi BI untuk invoice. IDR ditampilkan sebagai ilustrasi perbandingan saja; USD tetap sumber harga resmi.
+        </div>
+
+        <div class="effective-banner">
           <strong>⚠ Tentang Metrik Efektif</strong>
           Harga per 1M token adalah <em>floor price</em> (lantai harga) berdasarkan asumsi penggunaan jenuh/maksimal — bukan tagihan tipikal Anda. 
           Tagihan nyata bervariasi tergantung pola usage. Lihat detail agen untuk asumsi lengkap dan tingkat kepercayaan data.
         </div>
-      </header>
 
-      <main>
         <div class="agent-grid">
           {sortedAgents.map(agent => (
             <a href={`/agen/${agent.id}/`} class="agent-card">
@@ -271,7 +296,7 @@ const billingLabels = {
               </div>
 
               <div class="pricing">
-                {agent.stickerUsd && (
+                {agent.stickerUsd && agent.stickerUsd > 0 && (
                   <div class="price-sticker">
                     Sticker: {formatUSD(agent.stickerUsd)}/bulan
                   </div>
@@ -283,6 +308,12 @@ const billingLabels = {
                   )}
                 </div>
                 <div class="price-label">biaya nyata per bulan</div>
+                <div class="price-idr">
+                  {formatIDR(usdToIdr(agent.bandLowUsd))}
+                  {agent.bandLowUsd !== agent.bandHighUsd && (
+                    <> – {formatIDR(usdToIdr(agent.bandHighUsd))}</>
+                  )}
+                </div>
                 
                 {agent.effectivePerMTokUsd && (
                   <div class="effective-metric">
