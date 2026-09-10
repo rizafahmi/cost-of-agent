@@ -2,8 +2,8 @@
 
 ## Sub-features
 
-- **agent-cards-display** — All 12 agents render as individual clickable cards
-- **cost-based-sorting** — Cards sorted by `bandLowUsd` ascending (lowest first: continue→devin)
+- **agent-cards-display** — All 9 agents render as individual clickable cards
+- **cost-based-sorting** — Cards sorted by `bandLowUsd` ascending (lowest first: muse-code→cursor-business)
 - **card-content** — Each card shows name, vendor, category badge, billing badge, price band
 - **sticker-vs-band** — Sticker price shown when present, struck through to emphasize real cost
 - **price-formatting** — Bahasa locale with `US$` prefix (e.g., `US$20` not `$20`)
@@ -18,8 +18,8 @@
 2. See heading "💰 Cost of Agent"
 3. See subtitle explaining directory purpose (Bahasa: "Direktori biaya nyata...")
 4. Scroll to see grid of agent cards (3-column desktop, 1-column mobile)
-5. First card: Continue ($0 - lowest cost)
-6. Last card: Devin ($500 - highest cost)
+5. First card: Muse Code ($5 - lowest cost)
+6. Last card: Cursor Teams Standard ($40 - highest cost)
 7. Each card shows pricing and metadata badges
 8. Hover over card to see lift effect
 
@@ -35,15 +35,15 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs wait-ready
 ### Verify home page structure
 
 ```bash
-# Check agent count, sort order (first=continue, last=devin)
+# Check agent count, sort order (first=muse-code, last=cursor-business)
 node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs check-home
 ```
 
 Expected output:
 ```
-✓ Agent count: 12 (reasonable range)
-✓ First agent: continue (lowest cost)
-✓ Last agent: devin (highest cost)
+✓ Agent count: 9 (reasonable range)
+✓ First agent: muse-code (lowest cost)
+✓ Last agent: cursor-business (highest cost)
 ```
 
 ### Extract agent display order
@@ -110,7 +110,7 @@ Doctor checks relevant to home page:
 - Build artifacts (dist/index.html exists)
 - Server responds (home page 200)
 - Key content (title, agent-card class)
-- Route count (13 total: 1 home + 12 agents)
+- Route count (10 total: 1 home + 9 agents)
 
 ### Cleanup
 
@@ -139,4 +139,4 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs stop
 
 9. **Selector stability:** Use semantic class names from SKILL.md: `a.agent-card`, `h2.agent-name`, `.agent-vendor`, `.price-band`, `.badge-category`, `.badge-billing`. Avoid element-only selectors.
 
-10. **Agent count assertion:** The CLI `check-home` asserts "reasonable range" (10-15 agents). Exact count 12 verified in `order` command output line count.
+10. **Agent count assertion:** The CLI `check-home` asserts "reasonable range" (10-15 agents). Exact count 9 verified in `order` command output line count.
