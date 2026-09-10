@@ -22,7 +22,7 @@ Cost of Agent adalah direktori publik yang menampilkan biaya **nyata** dari berb
 
 **Catatan:** Proyek ini **tidak menggunakan Next.js**. Ini adalah situs statis murni yang di-generate dengan Astro.
 
-**Domain:** Domain produksi dapat diubah di `astro.config.mjs` pada field `site`.
+**Live URL:** Situs ini live di [https://cost-of-agent.rizafahmi.workers.dev](https://cost-of-agent.rizafahmi.workers.dev). Domain produksi dapat diubah di `astro.config.mjs` pada field `site` setelah custom domain terkonfigurasi.
 
 ## Development
 
@@ -122,7 +122,7 @@ Cara deploy ke Cloudflare Pages:
    - Node.js version: **22** atau lebih tinggi (jika diminta di Environment variables, set `NODE_VERSION=22`)
 5. Klik **Save and Deploy**
 
-**Custom domain:** Untuk menggunakan domain `cost-of-agent.id`, tambahkan custom domain di Cloudflare Pages settings. Pastikan field `site` di `astro.config.mjs` sesuai dengan domain yang digunakan.
+**Custom domain:** Situs saat ini menggunakan domain workers.dev default. Untuk menggunakan custom domain seperti `cost-of-agent.id`, tambahkan custom domain di Cloudflare Pages settings dan update field `site` di `astro.config.mjs` setelah domain terbukti berfungsi.
 
 **Catatan:** Deploy ini untuk situs statis murni. Tidak memerlukan Wrangler CLI atau konfigurasi tambahan — cukup connect via dashboard Cloudflare Pages.
 
