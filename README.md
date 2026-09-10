@@ -22,6 +22,8 @@ Cost of Agent adalah direktori publik yang menampilkan biaya **nyata** dari berb
 
 **Catatan:** Proyek ini **tidak menggunakan Next.js**. Ini adalah situs statis murni yang di-generate dengan Astro.
 
+**Domain:** Domain produksi dapat diubah di `astro.config.mjs` pada field `site`.
+
 ## Development
 
 ```bash
