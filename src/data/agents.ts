@@ -52,7 +52,7 @@ export const agents: AgentCost[] = [
     billing: "seat",
     stickerUsd: 10,
     bandLowUsd: 10,
-    bandHighUsd: 10,
+    bandHighUsd: 15,
     includes: [
       "Code completions unlimited",
       "Chat di IDE",
@@ -60,8 +60,9 @@ export const agents: AgentCost[] = [
       "Model GPT-4o, Claude Sonnet 3.5"
     ],
     caveats: [
-      "Tidak ada overage - flat seat price",
-      "Workspace tidak termasuk di Individual"
+      "Harga dasar $10/bulan flat",
+      "Fitur agentic (Copilot Workspace, extended context) dapat menambah biaya usage",
+      "TCO bisa naik untuk heavy agentic usage"
     ],
     sources: [
       {
@@ -80,7 +81,7 @@ export const agents: AgentCost[] = [
     billing: "seat",
     stickerUsd: 19,
     bandLowUsd: 19,
-    bandHighUsd: 19,
+    bandHighUsd: 30,
     includes: [
       "Semua fitur Individual",
       "Policy management",
@@ -89,7 +90,8 @@ export const agents: AgentCost[] = [
     ],
     caveats: [
       "Minimum 1 seat",
-      "Tidak ada overage - flat seat price"
+      "Harga dasar $19/seat/bulan",
+      "Fitur agentic dan extended usage dapat menambah TCO per seat"
     ],
     sources: [
       {
@@ -147,7 +149,7 @@ export const agents: AgentCost[] = [
       "Memerlukan Anthropic API key",
       "Biaya bervariasi berdasarkan usage token",
       "Tidak ada flat seat - pure consumption",
-      "Estimasi $10-100 untuk usage ringan-sedang"
+      "Band $10-100 adalah estimasi untuk usage ringan-sedang"
     ],
     sources: [
       {
@@ -279,92 +281,6 @@ export const agents: AgentCost[] = [
       {
         label: "Cursor Pricing",
         url: "https://cursor.com/pricing",
-        checkedAt: "2026-09-09"
-      }
-    ],
-    lastVerified: "2026-09-09"
-  },
-  {
-    id: "codeium-free",
-    name: "Codeium Free",
-    vendor: "Codeium",
-    category: "ide",
-    billing: "seat",
-    stickerUsd: 0,
-    bandLowUsd: 0,
-    bandHighUsd: 0,
-    includes: [
-      "Unlimited autocomplete",
-      "Chat terbatas",
-      "Mendukung 70+ languages",
-      "IDE integrations"
-    ],
-    caveats: [
-      "Gratis untuk individual",
-      "Chat capabilities terbatas vs Pro",
-      "Model tidak selalu yang terbaru"
-    ],
-    sources: [
-      {
-        label: "Codeium Pricing",
-        url: "https://codeium.com/pricing",
-        checkedAt: "2026-09-09"
-      }
-    ],
-    lastVerified: "2026-09-09"
-  },
-  {
-    id: "cursor-hobby",
-    name: "Cursor Hobby (Free)",
-    vendor: "Cursor",
-    category: "ide",
-    billing: "seat",
-    stickerUsd: 0,
-    bandLowUsd: 0,
-    bandHighUsd: 0,
-    includes: [
-      "2000 completions per bulan",
-      "Basic features",
-      "Akses terbatas ke premium models"
-    ],
-    caveats: [
-      "Completion limit 2000/bulan",
-      "Tidak ada premium model access",
-      "Untuk hobby projects"
-    ],
-    sources: [
-      {
-        label: "Cursor Pricing",
-        url: "https://cursor.com/pricing",
-        checkedAt: "2026-09-09"
-      }
-    ],
-    lastVerified: "2026-09-09"
-  },
-  {
-    id: "openai-chatgpt-plus",
-    name: "ChatGPT Plus (coding use)",
-    vendor: "OpenAI",
-    category: "cloud",
-    billing: "seat",
-    stickerUsd: 20,
-    bandLowUsd: 20,
-    bandHighUsd: 20,
-    includes: [
-      "GPT-4 access",
-      "Canvas mode untuk coding",
-      "Faster response times",
-      "Priority access to new features"
-    ],
-    caveats: [
-      "Bukan dedicated coding tool",
-      "Tidak ada IDE integration native",
-      "Rate limits per 3 jam untuk GPT-4"
-    ],
-    sources: [
-      {
-        label: "ChatGPT Pricing",
-        url: "https://openai.com/chatgpt/pricing",
         checkedAt: "2026-09-09"
       }
     ],

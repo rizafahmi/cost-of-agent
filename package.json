@@ -1,7 +1,8 @@
 {
-  "name": "astro-temp",
+  "name": "cost-of-agent",
   "type": "module",
   "version": "0.0.1",
+  "description": "Direktori biaya nyata AI coding agents - harga bulanan seat, token, dan overage dalam Bahasa Indonesia",
   "engines": {
     "node": ">=22.12.0"
   },
