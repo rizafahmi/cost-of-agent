@@ -130,7 +130,7 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs stop
 
 2. **No sticker agents:** Continue, Aider, Claude Code CLI have no `stickerUsd`. Detail page doesn't show "Harga Sticker" section for these. Only "Biaya Nyata" appears.
 
-3. **Flat price agents:** GitHub Copilot Individual, GitHub Copilot Business, Codeium Free, Cursor Hobby, ChatGPT Plus, Devin have `bandLowUsd === bandHighUsd`. These show single price, not range.
+3. **Flat price agents:** GitHub Copilot Individual, GitHub Copilot Business, Devin have `bandLowUsd === bandHighUsd`. These show single price, not range.
 
 4. **Multiple sources:** Some agents have multiple source objects. Each renders as separate `.source-link`. Most have 1 source, Aider has 2.
 
