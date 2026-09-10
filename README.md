@@ -129,13 +129,15 @@ Setiap push atau merge ke branch `main` akan otomatis build dan deploy ke Cloudf
 3. **Dapatkan Project Name:**
    - Project name adalah nama Cloudflare Pages project (biasanya: `cost-of-agent`)
    - Cek di **Workers & Pages** untuk nama project yang sudah ada atau yang akan digunakan
+   - **Catatan:** Project name bukan secret — bisa disimpan sebagai repository variable atau menggunakan default `cost-of-agent`
 
 4. **Tambahkan GitHub Secrets:**
    - Buka repository: [https://github.com/rizafahmi/cost-of-agent/settings/secrets/actions](https://github.com/rizafahmi/cost-of-agent/settings/secrets/actions)
-   - Klik **New repository secret** dan tambahkan tiga secret berikut:
+   - Klik **New repository secret** dan tambahkan **dua secret berikut (sebagai Repository secrets, BUKAN Environment secrets):**
      - `CLOUDFLARE_API_TOKEN` → token dari langkah 1
      - `CLOUDFLARE_ACCOUNT_ID` → account ID dari langkah 2
-     - `CLOUDFLARE_PROJECT_NAME` → nama project (contoh: `cost-of-agent`)
+   - (Opsional) Untuk custom project name, tambahkan repository variable `CLOUDFLARE_PROJECT_NAME` di [Settings → Variables → Actions](https://github.com/rizafahmi/cost-of-agent/settings/variables/actions)
+   - Workflow akan menggunakan `cost-of-agent` sebagai default jika variable tidak diset
 
 5. **Done!** Setiap merge ke `main` akan otomatis deploy ke live URL.
 
