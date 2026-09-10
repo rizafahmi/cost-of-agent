@@ -108,9 +108,42 @@ Contoh:
 
 ## Deploy
 
-### Cloudflare Pages
+### Automatic Deployment (GitHub Actions)
 
-Cara deploy ke Cloudflare Pages:
+Setiap push atau merge ke branch `main` akan otomatis build dan deploy ke Cloudflare Pages melalui GitHub Actions.
+
+**Setup sekali jalan:**
+
+1. **Dapatkan Cloudflare API Token:**
+   - Login ke [Cloudflare Dashboard](https://dash.cloudflare.com/)
+   - Pergi ke **My Profile** → **API Tokens** → **Create Token**
+   - Gunakan template **Edit Cloudflare Workers** atau buat custom token dengan permissions:
+     - Account: Cloudflare Pages (Edit)
+     - Account: Account Settings (Read)
+   - Copy token yang dihasilkan
+
+2. **Dapatkan Cloudflare Account ID:**
+   - Di [Cloudflare Dashboard](https://dash.cloudflare.com/), pilih account Anda
+   - Account ID terlihat di sidebar kanan atau di URL
+
+3. **Dapatkan Project Name:**
+   - Project name adalah nama Cloudflare Pages project (biasanya: `cost-of-agent`)
+   - Cek di **Workers & Pages** untuk nama project yang sudah ada atau yang akan digunakan
+
+4. **Tambahkan GitHub Secrets:**
+   - Buka repository: [https://github.com/rizafahmi/cost-of-agent/settings/secrets/actions](https://github.com/rizafahmi/cost-of-agent/settings/secrets/actions)
+   - Klik **New repository secret** dan tambahkan tiga secret berikut:
+     - `CLOUDFLARE_API_TOKEN` → token dari langkah 1
+     - `CLOUDFLARE_ACCOUNT_ID` → account ID dari langkah 2
+     - `CLOUDFLARE_PROJECT_NAME` → nama project (contoh: `cost-of-agent`)
+
+5. **Done!** Setiap merge ke `main` akan otomatis deploy ke live URL.
+
+**Workflow file:** `.github/workflows/deploy-cloudflare.yml`
+
+### Manual Deployment (Dashboard)
+
+Alternatif untuk deploy manual via Cloudflare Dashboard:
 
 1. Login ke [Cloudflare Dashboard](https://dash.cloudflare.com/)
 2. Pilih **Workers & Pages** → **Create application** → **Pages** → **Connect to Git**
