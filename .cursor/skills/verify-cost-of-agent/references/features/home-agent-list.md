@@ -2,8 +2,8 @@
 
 ## Sub-features
 
-- **agent-cards-display** — All 9 agents render as individual clickable cards
-- **cost-based-sorting** — Cards sorted by `bandLowUsd` ascending (lowest first: muse-code→cursor-business)
+- **agent-cards-display** — All 11 agents render as individual clickable cards
+- **cost-based-sorting** — Cards sorted by `bandLowUsd` ascending, then by ID alphabetically (lowest first: byteplus-modelark-code→cursor-business)
 - **card-content** — Each card shows name, vendor, category badge, billing badge, price band
 - **sticker-vs-band** — Sticker price shown when present, struck through to emphasize real cost
 - **price-formatting** — Bahasa locale with `US$` prefix (e.g., `US$20` not `$20`)
@@ -18,7 +18,7 @@
 2. See heading "💰 Cost of Agent"
 3. See subtitle explaining directory purpose (Bahasa: "Direktori biaya nyata...")
 4. Scroll to see grid of agent cards (3-column desktop, 1-column mobile)
-5. First card: Muse Code ($5 - lowest cost)
+5. First card: BytePlus ModelArk (Dola-Seed Code API) ($5 - lowest cost)
 6. Last card: Cursor Teams Standard ($40 - highest cost)
 7. Each card shows pricing and metadata badges
 8. Hover over card to see lift effect
@@ -35,14 +35,14 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs wait-ready
 ### Verify home page structure
 
 ```bash
-# Check agent count, sort order (first=muse-code, last=cursor-business)
+# Check agent count, sort order (first=byteplus-modelark-code, last=cursor-business)
 node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs check-home
 ```
 
 Expected output:
 ```
-✓ Agent count: 9 (reasonable range)
-✓ First agent: muse-code (lowest cost)
+✓ Agent count: 11 (reasonable range)
+✓ First agent: byteplus-modelark-code (lowest cost)
 ✓ Last agent: cursor-business (highest cost)
 ```
 
