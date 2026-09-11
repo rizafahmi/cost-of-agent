@@ -68,7 +68,7 @@ node control-cost-of-agent.mjs doctor
 node control-cost-of-agent.mjs check-home
 # Checks:
 #   - Agent count ~9
-#   - First agent: "muse-code" (lowest bandLowUsd: 5)
+#   - First agent: "byteplus-modelark-code" (lowest bandLowUsd: 5)
 #   - Last agent: "cursor-business" (highest bandLowUsd: 40)
 # Exit: 0 = passed, non-zero = failed
 ```
@@ -90,7 +90,7 @@ node control-cost-of-agent.mjs check-detail cursor-pro
 ```bash
 node control-cost-of-agent.mjs order
 # Output: One agent ID per line (stdout)
-# First: "muse-code" (lowest cost)
+# First: "byteplus-modelark-code" (lowest cost)
 # Last: "cursor-business" (highest cost)
 # Exit: 0 = success, non-zero = fetch failed
 ```
