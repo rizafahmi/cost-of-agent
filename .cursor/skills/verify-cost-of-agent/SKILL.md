@@ -15,7 +15,7 @@ Systematic verification for the Cost-of-Agent static site — a Bahasa Indonesia
 
 **Tech stack:** Astro 7.x + TypeScript, static site generator (`output: 'static'`)
 
-**Data source:** `src/data/agents.ts` (typed array of 12 agents)
+**Data source:** `src/data/agents.ts` (typed array of 9 agents)
 
 **Key features:**
 - Agent cards showing name, vendor, category, billing type, price band
@@ -67,7 +67,7 @@ Run diagnostics after launch to verify build artifacts, server response, content
 ```bash
 node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs doctor
 # Checks:
-# 1. Build artifacts exist (dist/index.html, dist/agen/, 12 agent dirs)
+# 1. Build artifacts exist (dist/index.html, dist/agen/, 9 agent dirs)
 # 2. Server responds (home 200, detail 200)
 # 3. Key content present (title, agent-card, Bahasa sections)
 # 4. Route count (10 total: 1 home + 9 agents)
@@ -105,19 +105,19 @@ await page.goto('http://127.0.0.1:4323/');
 const title = await page.$eval('h1', el => el.textContent);
 assert(title.includes('Cost of Agent'));
 
-// Count agent cards (should be 12)
+// Count agent cards (should be 9)
 const cardCount = await page.$$eval('a.agent-card', cards => cards.length);
-assert(cardCount === 12);
+assert(cardCount === 9);
 
-// Click first card (Continue - lowest bandLowUsd)
+// Click first card (Muse Code - lowest bandLowUsd: 5)
 const firstCardHref = await page.$eval('a.agent-card', el => el.href);
-assert(firstCardHref.includes('/agen/continue/'));
+assert(firstCardHref.includes('/agen/muse-code/'));
 await page.click('a.agent-card');
 
 // Verify detail loaded
 await page.waitForSelector('h1');
 const detailName = await page.$eval('h1', el => el.textContent);
-assert(detailName === 'Continue');
+assert(detailName === 'Muse Code');
 
 // Screenshot for evidence
 await page.screenshot({ path: '/workspace/.cursor/skills/verify-cost-of-agent/evidence/home-to-detail.png' });
@@ -128,9 +128,9 @@ await page.screenshot({ path: '/workspace/.cursor/skills/verify-cost-of-agent/ev
 # Extract agent IDs from href attributes in order
 curl -s http://127.0.0.1:4323/ | \
   grep -oP 'href="/agen/\K[^/]+' | \
-  head -12
-# First should be "continue" (bandLowUsd: 0)
-# Last should be "devin" (bandLowUsd: 500)
+  head -9
+# First should be "muse-code" (bandLowUsd: 5)
+# Last should be "cursor-business" (bandLowUsd: 40)
 ```
 
 ### Check detail page elements
@@ -145,7 +145,7 @@ curl -s "$URL" | grep -q "Yang Termasuk" && echo "✓ Includes heading"
 curl -s "$URL" | grep -q "Catatan Penting" && echo "✓ Caveats heading"
 curl -s "$URL" | grep -q "Sumber Data" && echo "✓ Sources heading"
 curl -s "$URL" | grep -q "cursor.com/pricing" && echo "✓ Source link"
-curl -s "$URL" | grep -q "2026-09-09" && echo "✓ lastVerified date"
+curl -s "$URL" | grep -q "2026-09-10" && echo "✓ lastVerified date"
 ```
 
 ## Evidence
@@ -261,15 +261,15 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs smoke
 
 2. **Price formatting:** Prices are formatted with `Intl.NumberFormat` using `id-ID` locale, producing `US$` prefix. Example: `US$20` not `$20` or `USD 20`.
 
-3. **Zero-cost agents:** Three agents have `bandLowUsd: 0` (Continue, Codeium Free, Cursor Hobby). These render as `US$0` or `US$0 – US$50`. Check for both flat and range display.
+3. **Lowest-cost agents:** Two agents have `bandLowUsd: 5` (Muse Code, BytePlus ModelArk Code). These render as `US$5` or `US$5 – US$X` ranges.
 
-4. **Missing sticker:** Not all agents have `stickerUsd`. Only render sticker price if present. Example: Continue has no sticker, only band.
+4. **Missing sticker:** Not all agents have `stickerUsd`. Only render sticker price if present. Example: BytePlus ModelArk Code has no sticker, only band.
 
 5. **Bahasa copy:** All user-facing text is in Bahasa Indonesia. Headings like "Yang Termasuk", "Catatan Penting", "Sumber Data". Don't assert English headings.
 
 6. **Route generation:** Astro builds `/agen/[id]/index.html` as directory with index file, not `/agen/[id].html`. URLs end with trailing slash: `/agen/cursor-pro/`.
 
-7. **Sorted by band low:** Home page sorts agents by `bandLowUsd` ascending. First card should be lowest cost (Continue at $0), last should be highest (Devin at $500).
+7. **Sorted by band low:** Home page sorts agents by `bandLowUsd` ascending. First card should be lowest cost (Muse Code at $5), last should be highest (Cursor Business at $40).
 
 8. **Dev vs Preview:** Prefer `pnpm preview` (serves built static files from `dist/`) over `pnpm dev` (dynamic server). Preview is what users get in production.
 

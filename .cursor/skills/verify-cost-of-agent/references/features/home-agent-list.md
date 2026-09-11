@@ -4,6 +4,9 @@
 
 - **agent-cards-display** — All 9 agents render as individual clickable cards
 - **cost-based-sorting** — Cards sorted by `bandLowUsd` ascending (lowest first: muse-code→cursor-business)
+- **idr-display** — Each card shows IDR equivalent price below USD band
+- **kurs-disclaimer** — Page-level banner explaining USD/IDR exchange rate and source
+- **effective-metrics** — Optional per-agent metric showing effective cost per 1M tokens
 - **card-content** — Each card shows name, vendor, category badge, billing badge, price band
 - **sticker-vs-band** — Sticker price shown when present, struck through to emphasize real cost
 - **price-formatting** — Bahasa locale with `US$` prefix (e.g., `US$20` not `$20`)
@@ -53,20 +56,17 @@ Expected output:
 node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs order
 ```
 
-Expected output (12 lines):
+Expected output (9 lines):
 ```
-continue
-codeium-free
-cursor-hobby
-aider
-github-copilot-individual
-claude-code-cli
-windsurf-pro
+muse-code
+byteplus-modelark-code
+github-copilot-pro
+glm-coding-plan
 github-copilot-business
 cursor-pro
-openai-chatgpt-plus
+devin-pro
+claude-code-cli
 cursor-business
-devin
 ```
 
 ### Get structural snapshot (JSON)
@@ -84,8 +84,8 @@ Expected structure:
   "timestamp": "2026-09-09T23:10:41.428Z",
   "structure": {
     "type": "home",
-    "agentCardCount": 12,
-    "agentIds": ["continue", "codeium-free", ...],
+    "agentCardCount": 9,
+    "agentIds": ["muse-code", "byteplus-modelark-code", ...],
     "hasTitle": true,
     "hasBahasaCopy": true
   }
@@ -110,6 +110,7 @@ Doctor checks relevant to home page:
 - Build artifacts (dist/index.html exists)
 - Server responds (home page 200)
 - Key content (title, agent-card class)
+- Agent count (9 directories in dist/agen/)
 - Route count (10 total: 1 home + 9 agents)
 
 ### Cleanup
@@ -125,13 +126,13 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs stop
 
 2. **Bahasa locale formatting:** Prices use Indonesian locale but USD currency, producing `US$20` not `$20` or `USD 20`. Don't assert American formatting patterns.
 
-3. **Zero-cost agents:** Three agents have `bandLowUsd: 0` (Continue, Codeium Free, Cursor Hobby). These display as `US$0` or `US$0 – US$50` (range). Continue is first due to sort order.
+3. **Lowest-cost agents:** Two agents have `bandLowUsd: 5` (Muse Code, BytePlus ModelArk Code). These display as `US$5` or `US$5 – US$X` ranges. Muse Code is first due to sort order.
 
-4. **Sticker price optional:** Not all agents show sticker price. Only 7 of 12 have `stickerUsd` defined. Continue (first card) has no sticker — shows only band.
+4. **Sticker price optional:** Not all agents show sticker price. Only BytePlus ModelArk Code lacks `stickerUsd` — shows only band without sticker comparison.
 
-5. **Flat vs. range prices:** Some agents have identical low/high band (e.g., GitHub Copilot Individual: `US$10`). Others show range (e.g., Cursor Pro: `US$20 – US$60`). DOM structure differs.
+5. **All prices are ranges:** All current agents show price ranges (e.g., Cursor Pro: `US$20 – US$60`, Muse Code: `US$5 – US$10`). DOM structure includes both low and high values.
 
-6. **Card order stability:** Sort is deterministic: by `bandLowUsd` ascending, then data file insertion order as tiebreaker. Agents with same cost (e.g., three at $0) maintain file order: Continue, Codeium Free, Cursor Hobby.
+6. **Card order stability:** Sort is deterministic: by `bandLowUsd` ascending, then data file insertion order as tiebreaker. Agents with same cost (e.g., two at $5) maintain file order: Muse Code, BytePlus ModelArk Code.
 
 7. **Grid responsiveness:** Desktop shows 3-column grid (min 320px cards). Mobile switches to single column. Test both viewports if capturing screenshots.
 
@@ -139,4 +140,4 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs stop
 
 9. **Selector stability:** Use semantic class names from SKILL.md: `a.agent-card`, `h2.agent-name`, `.agent-vendor`, `.price-band`, `.badge-category`, `.badge-billing`. Avoid element-only selectors.
 
-10. **Agent count assertion:** The CLI `check-home` asserts "reasonable range" (10-15 agents). Exact count 9 verified in `order` command output line count.
+10. **Agent count assertion:** The CLI `check-home` asserts "reasonable range" (8-12 agents). Exact count 9 verified in `order` command output line count.
