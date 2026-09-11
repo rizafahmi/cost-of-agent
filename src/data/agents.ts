@@ -267,8 +267,8 @@ export const agents: AgentCost[] = [
     effectivePerMTokUsd: 19
   },
   {
-    id: "muse-code",
-    name: "Muse Code",
+    id: "muse-coding-plan",
+    name: "Muse Coding Plan",
     vendor: "Meta",
     category: "cli",
     billing: "seat",
@@ -286,6 +286,7 @@ export const agents: AgentCost[] = [
     ],
     caveats: [
       "Harga USD tidak tercetak di halaman subscriptions resmi — banyak sumber sekunder laporkan $5/$15/$50",
+      "Muse Coding Plan adalah coding-agent subscription plan dari Meta (Everyday/High/Power)",
       "Muse Spark 1.3 adalah model terkini di agent (Sept 2026)",
       "Ada Muse Spark API token product terpisah untuk pay-as-you-go billing",
       "Benefits & availability vary by region",
