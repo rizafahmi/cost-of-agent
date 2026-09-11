@@ -173,15 +173,18 @@ export const agents: AgentCost[] = [
     includes: [
       "Devin Desktop IDE (formerly Windsurf)",
       "Devin Cloud autonomous agents",
+      "SWE-2 coding model (50.0% FrontierCode 1.1, launched Sept 2026)",
       "Increased daily and weekly quotas",
       "Full model access (OpenAI, Claude, Gemini)",
-      "Free SWE 1.7 dan open source models",
+      "SWE-2 and open source models",
       "Unlimited Tab completions",
       "Extra usage at API pricing"
     ],
     caveats: [
       "SATU plan family mencakup Desktop IDE + Cloud agents",
       "Tiers: Free $0, Pro $20, Max $200, Teams $80+$40/seat",
+      "SWE-2 (Sept 2026) adalah model upgrade dalam existing quotas - predecessor SWE-1.7",
+      "Cognition klaim SWE-2 lebih cost-effective vs SWE-1.7 (fewer turns needed)",
       "Windsurf acquired Juli 2025, rebranded Devin Desktop Juni 2026",
       "Quota tidak dipublikasikan dalam angka eksplisit",
       "Heavy autonomous usage dapat memicu on-demand billing"
@@ -190,7 +193,12 @@ export const agents: AgentCost[] = [
       {
         label: "Devin Pricing",
         url: "https://devin.ai/pricing",
-        checkedAt: "2026-09-10"
+        checkedAt: "2026-09-11"
+      },
+      {
+        label: "Cognition SWE-2 Announcement",
+        url: "https://cognition.com/blog/swe-2",
+        checkedAt: "2026-09-11"
       },
       {
         label: "Cognition Windsurf Acquisition",
@@ -203,7 +211,7 @@ export const agents: AgentCost[] = [
         checkedAt: "2026-09-10"
       }
     ],
-    lastVerified: "2026-09-10",
+    lastVerified: "2026-09-11",
     assumptions: [
       "Pro baseline $20 dengan quota tidak dipublikasi",
       "Autonomous agent usage sulit diestimasi tanpa token economics publik",
@@ -269,7 +277,7 @@ export const agents: AgentCost[] = [
     bandHighUsd: 50,
     includes: [
       "Everyday / High / Power Usage tiers",
-      "Muse Spark included",
+      "Muse Spark 1.3 included (current model as of Sept 2026)",
       "Everyday: ~10–50 requests / 5h",
       "High: 3× Everyday limits",
       "Power: 10× Everyday limits",
@@ -278,9 +286,10 @@ export const agents: AgentCost[] = [
     ],
     caveats: [
       "Harga USD tidak tercetak di halaman subscriptions resmi — banyak sumber sekunder laporkan $5/$15/$50",
+      "Muse Spark 1.3 adalah model terkini di agent (Sept 2026)",
+      "Ada Muse Spark API token product terpisah untuk pay-as-you-go billing",
       "Benefits & availability vary by region",
-      "Checkout Accounts Center adalah sumber kebenaran untuk harga final",
-      "Pay-as-you-go tetap ada via Meta Model API terpisah"
+      "Checkout Accounts Center adalah sumber kebenaran untuk harga final"
     ],
     sources: [
       {
@@ -422,5 +431,96 @@ export const agents: AgentCost[] = [
     ],
     confidence: "medium",
     effectivePerMTokUsd: 50
+  },
+  {
+    id: "deepseek-flash",
+    name: "DeepSeek V4.1 Flash (API)",
+    vendor: "DeepSeek",
+    category: "cloud",
+    billing: "token",
+    bandLowUsd: 5,
+    bandHighUsd: 80,
+    includes: [
+      "DeepSeek V4.1 Flash model (deepseek-flash)",
+      "1M token context window",
+      "384K max output tokens",
+      "Supports thinking and non-thinking modes",
+      "Native multimodal (vision) support",
+      "Pay-per-token API billing"
+    ],
+    caveats: [
+      "Peak/off-peak pricing: weekdays 01:00–04:00 and 06:00–10:00 UTC adalah peak, sisanya off-peak",
+      "Off-peak adalah 50% dari peak pricing",
+      "Cache hit jauh lebih murah: $0.003 (off-peak) vs $0.15 (cache miss off-peak)",
+      "Starting Sept 14, 2026 04:00 UTC: deepseek-v4-pro alias routes to V4.1 Flash at Flash rates",
+      "Selalu cek pricing page resmi untuk rate terkini"
+    ],
+    sources: [
+      {
+        label: "DeepSeek API Pricing",
+        url: "https://api-docs.deepseek.com/quick_start/pricing",
+        checkedAt: "2026-09-11"
+      },
+      {
+        label: "DeepSeek V4.1-Flash Announcement",
+        url: "https://api-docs.deepseek.com/news/news260910",
+        checkedAt: "2026-09-11"
+      }
+    ],
+    lastVerified: "2026-09-11",
+    assumptions: [
+      "Off-peak pricing (50% of peak): cache miss $0.15, output $0.60 per 1M",
+      "Blended 50/50 input/output off-peak: ($0.15 + $0.60) / 2 = $0.375 per 1M",
+      "Light usage: ~15M tokens/mo = $5.625 off-peak",
+      "Heavy usage: ~200M tokens/mo = $75 off-peak",
+      "Band $5-80 reflects light to heavy off-peak API spend"
+    ],
+    confidence: "high",
+    effectivePerMTokUsd: 0.375
+  },
+  {
+    id: "muse-spark",
+    name: "Muse Spark (Meta Model API)",
+    vendor: "Meta",
+    category: "cloud",
+    billing: "token",
+    bandLowUsd: 8,
+    bandHighUsd: 90,
+    includes: [
+      "Muse Spark 1.3, 1.2, 1.1 API access",
+      "Standard tier: $1.25 input, $0.15 cached input, $4.25 output per 1M tokens",
+      "1M token context window",
+      "Native multimodal (vision, video, audio, PDF)",
+      "Supports all reasoning effort levels (including max on Standard tier)",
+      "Pay-per-token API billing, no minimum commitment"
+    ],
+    caveats: [
+      "Ini API token product, BUKAN Muse Code subscription (subscription terpisah di $5/$15/$50)",
+      "Ada Contributor tier murah ($0.10 input, $0.002 cached, $0.20 output) tapi Meta dapat train dari data Anda",
+      "Max reasoning tersedia di Standard tier tapi tidak ada separate rate dipublikasi",
+      "Muse Code subscription termasuk akses ke Muse Spark 1.3 via included limits",
+      "Selalu cek pricing page resmi untuk rate terkini"
+    ],
+    sources: [
+      {
+        label: "Meta Model API Pricing",
+        url: "https://ai.developer.meta.com/docs/pricing-rate-limits/",
+        checkedAt: "2026-09-11"
+      },
+      {
+        label: "Muse Spark 1.3 Model Page",
+        url: "https://developer.meta.com/ai/models/muse-spark/",
+        checkedAt: "2026-09-11"
+      }
+    ],
+    lastVerified: "2026-09-11",
+    assumptions: [
+      "Standard tier blended 50/50 input/output: ($1.25 + $4.25) / 2 = $2.75 per 1M",
+      "Light usage: ~3M tokens/mo = $8.25",
+      "Heavy usage: ~33M tokens/mo = $90.75",
+      "Band $8-90 reflects light to heavy Standard tier API spend"
+    ],
+    confidence: "high",
+    effectivePerMTokUsd: 2.75
   }
 ];

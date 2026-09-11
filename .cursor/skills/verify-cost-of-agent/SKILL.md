@@ -15,7 +15,7 @@ Systematic verification for the Cost-of-Agent static site — a Bahasa Indonesia
 
 **Tech stack:** Astro 7.x + TypeScript, static site generator (`output: 'static'`)
 
-**Data source:** `src/data/agents.ts` (typed array of 12 agents)
+**Data source:** `src/data/agents.ts` (typed array of 11 agents)
 
 **Key features:**
 - Agent cards showing name, vendor, category, billing type, price band
@@ -67,10 +67,10 @@ Run diagnostics after launch to verify build artifacts, server response, content
 ```bash
 node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs doctor
 # Checks:
-# 1. Build artifacts exist (dist/index.html, dist/agen/, 12 agent dirs)
+# 1. Build artifacts exist (dist/index.html, dist/agen/, 11 agent dirs)
 # 2. Server responds (home 200, detail 200)
 # 3. Key content present (title, agent-card, Bahasa sections)
-# 4. Route count (10 total: 1 home + 9 agents)
+# 4. Route count (12 total: 1 home + 11 agents)
 # Exit code 0 = all passed, non-zero = failures
 ```
 
@@ -105,19 +105,19 @@ await page.goto('http://127.0.0.1:4323/');
 const title = await page.$eval('h1', el => el.textContent);
 assert(title.includes('Cost of Agent'));
 
-// Count agent cards (should be 12)
+// Count agent cards (should be 11)
 const cardCount = await page.$$eval('a.agent-card', cards => cards.length);
-assert(cardCount === 12);
+assert(cardCount === 11);
 
-// Click first card (Continue - lowest bandLowUsd)
+// Click first card (byteplus-modelark-code - lowest bandLowUsd, alphabetically first)
 const firstCardHref = await page.$eval('a.agent-card', el => el.href);
-assert(firstCardHref.includes('/agen/continue/'));
+assert(firstCardHref.includes('/agen/byteplus-modelark-code/'));
 await page.click('a.agent-card');
 
 // Verify detail loaded
 await page.waitForSelector('h1');
 const detailName = await page.$eval('h1', el => el.textContent);
-assert(detailName === 'Continue');
+assert(detailName === 'BytePlus ModelArk (Dola-Seed Code API)');
 
 // Screenshot for evidence
 await page.screenshot({ path: '/workspace/.cursor/skills/verify-cost-of-agent/evidence/home-to-detail.png' });
@@ -128,9 +128,9 @@ await page.screenshot({ path: '/workspace/.cursor/skills/verify-cost-of-agent/ev
 # Extract agent IDs from href attributes in order
 curl -s http://127.0.0.1:4323/ | \
   grep -oP 'href="/agen/\K[^/]+' | \
-  head -12
-# First should be "continue" (bandLowUsd: 0)
-# Last should be "devin" (bandLowUsd: 500)
+  head -11
+# First should be "byteplus-modelark-code" (bandLowUsd: 5, alphabetically first)
+# Last should be "cursor-business" (bandLowUsd: 40)
 ```
 
 ### Check detail page elements
@@ -194,15 +194,15 @@ All helpers use the control CLI for reproducibility and agent-friendly output.
 ```bash
 node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs order
 # Prints agent IDs (one per line) in display order
-# First should be "continue" (lowest cost), last "devin" (highest)
+# First should be "byteplus-modelark-code" (lowest cost), last "cursor-business" (highest)
 ```
 
 ### Check home page structure
 ```bash
 node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs check-home
 # Asserts:
-# - Agent count ~9
-# - First agent is "muse-code" (bandLowUsd: 5)
+# - Agent count ~11
+# - First agent is "byteplus-modelark-code" (bandLowUsd: 5)
 # - Last agent is "cursor-business" (bandLowUsd: 40)
 # Exit code 0 = passed, non-zero = failed
 ```
@@ -261,7 +261,7 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs smoke
 
 2. **Price formatting:** Prices are formatted with `Intl.NumberFormat` using `id-ID` locale, producing `US$` prefix. Example: `US$20` not `$20` or `USD 20`.
 
-3. **Zero-cost agents:** Three agents have `bandLowUsd: 0` (Continue, Codeium Free, Cursor Hobby). These render as `US$0` or `US$0 – US$50`. Check for both flat and range display.
+3. **Low-cost agents:** Multiple agents have low `bandLowUsd` values. Sort order is `bandLowUsd` ascending, then by ID alphabetically for ties.
 
 4. **Missing sticker:** Not all agents have `stickerUsd`. Only render sticker price if present. Example: Continue has no sticker, only band.
 
@@ -269,7 +269,7 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs smoke
 
 6. **Route generation:** Astro builds `/agen/[id]/index.html` as directory with index file, not `/agen/[id].html`. URLs end with trailing slash: `/agen/cursor-pro/`.
 
-7. **Sorted by band low:** Home page sorts agents by `bandLowUsd` ascending. First card should be lowest cost (Continue at $0), last should be highest (Devin at $500).
+7. **Sorted by band low:** Home page sorts agents by `bandLowUsd` ascending, then by ID alphabetically for ties. First card should be lowest cost (byteplus-modelark-code at $5), last should be highest (cursor-business at $40).
 
 8. **Dev vs Preview:** Prefer `pnpm preview` (serves built static files from `dist/`) over `pnpm dev` (dynamic server). Preview is what users get in production.
 
@@ -278,7 +278,7 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs smoke
 See [`references/features/`](references/features/) for detailed feature breakdown and CLI-driven verification instructions.
 
 Key features:
-- [Home Agent List](references/features/home-agent-list.md) — 12 cost-sorted cards
+- [Home Agent List](references/features/home-agent-list.md) — 11 cost-sorted cards
 - [Agent Detail Page](references/features/agent-detail-page.md) — Pricing, includes, caveats (Bahasa)
 - [Navigation Flow](references/features/navigation-flow.md) — Home ↔ detail via cards/back links
-- [Static Build Routes](references/features/static-build-routes.md) — 13 pre-rendered routes
+- [Static Build Routes](references/features/static-build-routes.md) — 12 pre-rendered routes
