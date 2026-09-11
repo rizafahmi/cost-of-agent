@@ -60,7 +60,7 @@ Should return status 200 and HTML content.
 node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs get /agen/cursor-pro/
 
 # Check multiple detail pages
-for agent_id in continue github-copilot-individual devin; do
+for agent_id in muse-code github-copilot-pro devin-pro; do
   echo "Testing /agen/$agent_id/..."
   node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs get /agen/$agent_id/ > /dev/null && \
     echo "  ✓ Accessible" || echo "  ✗ 404"
@@ -88,9 +88,9 @@ echo "$HOME_HTML" | grep -q 'href="/agen/cursor-pro/"' && \
 
 Or use order command to verify all hrefs:
 ```bash
-# Order command extracts hrefs, verifies all 12 agent links present
+# Order command extracts hrefs, verifies all 9 agent links present
 node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs order
-# Output: 12 agent IDs means 12 working links
+# Output: 9 agent IDs means 9 working links
 ```
 
 ### Verify detail links back to home
@@ -154,8 +154,8 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs stop
 
 9. **Anchor links:** No intra-page anchors (no `#includes` or `#caveats` fragment identifiers). All navigation is full page. Can't test scroll-to-section.
 
-10. **URL case sensitivity:** Agent IDs are lowercase with hyphens (e.g., `github-copilot-individual`). URLs are case-sensitive. `/agen/GitHub-Copilot-Individual/` will 404.
+10. **URL case sensitivity:** Agent IDs are lowercase with hyphens (e.g., `github-copilot-pro`). URLs are case-sensitive. `/agen/GitHub-Copilot-Pro/` will 404.
 
-11. **Route validation:** The `order` command validates all home→detail links exist by extracting hrefs. If order returns 12 IDs, all navigation paths are present.
+11. **Route validation:** The `order` command validates all home→detail links exist by extracting hrefs. If order returns 9 IDs, all navigation paths are present.
 
 12. **Deep link validation:** The `check-detail` command validates each detail route can be accessed directly (deep linking works).

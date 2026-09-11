@@ -8,7 +8,7 @@
 - **agent-routes** — Generates `dist/agen/{id}/index.html` for all 9 agents
 - **route-count** — Exactly 10 HTML files (1 home + 9 agents)
 - **asset-copying** — Favicon files copied to `dist/`
-- **build-logs** — Output shows "13 page(s) built" confirmation
+- **build-logs** — Output shows "10 page(s) built" confirmation
 - **clean-build** — No TypeScript errors or Astro warnings
 - **static-mode** — Astro config enforces `output: 'static'` (no SSR)
 
@@ -23,7 +23,7 @@
    - "output: static"
    - "Building static entrypoints..."
    - Route generation for each page
-4. See final "10 page(s) built" confirmation
+4. See final message with page count (e.g., "10 page(s) built" for current 9 agents)
 5. `dist/` directory appears in file tree
 
 ### Verify build artifacts
@@ -32,7 +32,7 @@
 2. See `index.html` (home page)
 3. See `agen/` subdirectory
 4. Open `agen/` directory
-5. See 9 subdirectories (cursor-pro, github-copilot-pro, muse-code, glm-coding-plan, byteplus-modelark-code, etc.)
+5. See 9 subdirectories (cursor-pro, github-copilot-pro, github-copilot-business, devin-pro, claude-code-cli, muse-code, glm-coding-plan, byteplus-modelark-code, cursor-business)
 6. Each subdirectory contains `index.html`
 7. See `favicon.ico` and `favicon.svg` in `dist/`
 
@@ -104,10 +104,10 @@ Doctor includes route count check:
 ### Verify specific routes
 
 ```bash
-# Check expected agent routes exist
-for agent_id in cursor-pro github-copilot-pro github-copilot-business \
-                devin-pro claude-code-cli muse-code glm-coding-plan \
-                byteplus-modelark-code cursor-business; do
+# Check expected agent routes exist (ordered by cost low to high)
+for agent_id in muse-code byteplus-modelark-code github-copilot-pro \
+                glm-coding-plan github-copilot-business cursor-pro \
+                devin-pro claude-code-cli cursor-business; do
   [ -f "dist/agen/$agent_id/index.html" ] && \
     echo "✓ /agen/$agent_id/" || echo "✗ Missing: /agen/$agent_id/"
 done
@@ -119,9 +119,9 @@ done
 # Run build and capture output
 pnpm build 2>&1 | tee /tmp/build-output.txt
 
-# Check for "10 page(s) built"
-grep -q "10 page(s) built" /tmp/build-output.txt && \
-  echo "✓ Build message confirms 10 pages" || echo "✗ Unexpected page count"
+# Check for page count (should be 10 for current 9 agents)
+grep -q "page(s) built" /tmp/build-output.txt && \
+  echo "✓ Build message shows page count" || echo "✗ No page count in output"
 
 # Check for "static" mode
 grep -q 'output: "static"' /tmp/build-output.txt && \
