@@ -55,10 +55,10 @@ node control-cost-of-agent.mjs wait-ready
 ```bash
 node control-cost-of-agent.mjs doctor
 # Checks:
-#   1. Build artifacts (dist/index.html, dist/agen/, 9 agent dirs)
+#   1. Build artifacts (dist/index.html, dist/agen/, 11 agent dirs)
 #   2. Server response (home 200, detail 200)
 #   3. Key content (title, agent-card, Bahasa sections)
-#   4. Route count (10 total: 1 home + 9 agents)
+#   4. Route count (12 total: 1 home + 11 agents)
 # Output: ✓/✗ lines for each check
 # Exit: 0 = all passed, non-zero = failures
 ```
@@ -67,7 +67,7 @@ node control-cost-of-agent.mjs doctor
 ```bash
 node control-cost-of-agent.mjs check-home
 # Checks:
-#   - Agent count ~9
+#   - Agent count ~11
 #   - First agent: "byteplus-modelark-code" (lowest bandLowUsd: 5)
 #   - Last agent: "cursor-business" (highest bandLowUsd: 40)
 # Exit: 0 = passed, non-zero = failed

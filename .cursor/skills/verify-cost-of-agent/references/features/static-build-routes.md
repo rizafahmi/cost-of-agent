@@ -105,9 +105,10 @@ Doctor includes route count check:
 
 ```bash
 # Check expected agent routes exist
-for agent_id in cursor-pro github-copilot-pro github-copilot-business \
-                devin-pro claude-code-cli muse-coding-plan glm-coding-plan \
-                byteplus-modelark-code cursor-business; do
+for agent_id in byteplus-modelark-code deepseek-flash muse-coding-plan \
+                muse-spark github-copilot-pro glm-coding-plan \
+                github-copilot-business claude-code-cli cursor-pro \
+                devin-pro cursor-business; do
   [ -f "dist/agen/$agent_id/index.html" ] && \
     echo "✓ /agen/$agent_id/" || echo "✗ Missing: /agen/$agent_id/"
 done
