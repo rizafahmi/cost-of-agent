@@ -2,12 +2,12 @@
 
 ## Sub-features
 
-- **agent-cards-display** — All 11 agents render as individual clickable cards
-- **cost-based-sorting** — Cards sorted by `bandLowUsd` ascending, then by ID alphabetically (lowest first: byteplus-modelark-code→cursor-business)
+- **agent-cards-display** — All agents render as individual clickable cards (11 agents as of 2026-09-16)
+- **cost-based-sorting** — Cards sorted by `bandLowUsd` ascending, then by ID alphabetically for ties (lowest first: byteplus-modelark-code at $5 → cursor-business at $40)
 - **card-content** — Each card shows name, vendor, category badge, billing badge, price band
 - **sticker-vs-band** — Sticker price shown when present, struck through to emphasize real cost
 - **price-formatting** — Bahasa locale with `US$` prefix (e.g., `US$20` not `$20`)
-- **category-badges** — Color-coded badges: IDE, CLI, Cloud, OSS-BYOK
+- **category-badges** — Color-coded badges: IDE, CLI, Cloud, OSS/BYOK
 - **billing-badges** — Type indicators: Seat, Token, Credits, Hybrid
 - **card-links** — Each card links to `/agen/[id]/` detail page
 - **visual-hierarchy** — Clear layout: header, subtitle (Bahasa), grid, footer
@@ -18,8 +18,8 @@
 2. See heading "💰 Cost of Agent"
 3. See subtitle explaining directory purpose (Bahasa: "Direktori biaya nyata...")
 4. Scroll to see grid of agent cards (3-column desktop, 1-column mobile)
-5. First card: BytePlus ModelArk (Dola-Seed Code API) ($5 - lowest cost)
-6. Last card: Cursor Teams Standard ($40 - highest cost)
+5. First card: BytePlus ModelArk (Dola-Seed Code API) ($5–$80 band, lowest bandLowUsd)
+6. Last card: Cursor Teams Standard ($40–$100 band, highest bandLowUsd)
 7. Each card shows pricing and metadata badges
 8. Hover over card to see lift effect
 
@@ -53,20 +53,19 @@ Expected output:
 node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs order
 ```
 
-Expected output (12 lines):
+Expected output (11 lines, cost-sorted):
 ```
-continue
-codeium-free
-cursor-hobby
-aider
-github-copilot-individual
-claude-code-cli
-windsurf-pro
+byteplus-modelark-code
+deepseek-flash
+muse-coding-plan
+muse-spark
+github-copilot-pro
+glm-coding-plan
 github-copilot-business
+claude-code-cli
 cursor-pro
-openai-chatgpt-plus
+devin-pro
 cursor-business
-devin
 ```
 
 ### Get structural snapshot (JSON)
@@ -81,11 +80,11 @@ Expected structure:
 {
   "url": "http://127.0.0.1:4323/",
   "statusCode": 200,
-  "timestamp": "2026-09-09T23:10:41.428Z",
+  "timestamp": "2026-09-16T01:32:15.689Z",
   "structure": {
     "type": "home",
-    "agentCardCount": 12,
-    "agentIds": ["continue", "codeium-free", ...],
+    "agentCardCount": 11,
+    "agentIds": ["byteplus-modelark-code", "deepseek-flash", "muse-coding-plan", ...],
     "hasTitle": true,
     "hasBahasaCopy": true
   }
@@ -110,7 +109,7 @@ Doctor checks relevant to home page:
 - Build artifacts (dist/index.html exists)
 - Server responds (home page 200)
 - Key content (title, agent-card class)
-- Route count (10 total: 1 home + 9 agents)
+- Route count (12 total: 1 home + 11 agents)
 
 ### Cleanup
 
@@ -125,13 +124,13 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs stop
 
 2. **Bahasa locale formatting:** Prices use Indonesian locale but USD currency, producing `US$20` not `$20` or `USD 20`. Don't assert American formatting patterns.
 
-3. **Zero-cost agents:** Three agents have `bandLowUsd: 0` (Continue, Codeium Free, Cursor Hobby). These display as `US$0` or `US$0 – US$50` (range). Continue is first due to sort order.
+3. **Low-cost tier:** Three agents have `bandLowUsd: 5` (BytePlus ModelArk, DeepSeek V4.1 Flash, Muse Coding Plan). Sort order among ties is alphabetical by ID: byteplus-modelark-code, deepseek-flash, muse-coding-plan.
 
-4. **Sticker price optional:** Not all agents show sticker price. Only 7 of 12 have `stickerUsd` defined. Continue (first card) has no sticker — shows only band.
+4. **Sticker price optional:** Not all agents show sticker price. 8 of 11 have `stickerUsd` defined. BytePlus ModelArk (first card), DeepSeek V4.1 Flash, and Muse Spark have no sticker — show only band.
 
-5. **Flat vs. range prices:** Some agents have identical low/high band (e.g., GitHub Copilot Individual: `US$10`). Others show range (e.g., Cursor Pro: `US$20 – US$60`). DOM structure differs.
+5. **Range prices:** All agents currently show price ranges (e.g., Cursor Pro: `US$20 – US$60`), as all have `bandLowUsd < bandHighUsd`. If an agent had flat pricing (`bandLowUsd === bandHighUsd`), DOM structure would differ.
 
-6. **Card order stability:** Sort is deterministic: by `bandLowUsd` ascending, then data file insertion order as tiebreaker. Agents with same cost (e.g., three at $0) maintain file order: Continue, Codeium Free, Cursor Hobby.
+6. **Card order stability:** Sort is deterministic: by `bandLowUsd` ascending, then by `id` alphabetically for ties. Agents with same bandLowUsd (e.g., three at $5) are sorted alphabetically: byteplus-modelark-code, deepseek-flash, muse-coding-plan.
 
 7. **Grid responsiveness:** Desktop shows 3-column grid (min 320px cards). Mobile switches to single column. Test both viewports if capturing screenshots.
 
@@ -139,4 +138,4 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs stop
 
 9. **Selector stability:** Use semantic class names from SKILL.md: `a.agent-card`, `h2.agent-name`, `.agent-vendor`, `.price-band`, `.badge-category`, `.badge-billing`. Avoid element-only selectors.
 
-10. **Agent count assertion:** The CLI `check-home` asserts "reasonable range" (10-15 agents). Exact count 9 verified in `order` command output line count.
+10. **Agent count assertion:** The CLI `check-home` asserts "reasonable range" (10-15 agents). Exact count 11 verified in `order` command output line count and `snapshot` structure.
