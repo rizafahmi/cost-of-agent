@@ -32,7 +32,7 @@
 2. See `index.html` (home page)
 3. See `agen/` subdirectory
 4. Open `agen/` directory
-5. See 11 subdirectories (cursor-pro, github-copilot-pro, muse-coding-plan, deepseek-flash, muse-spark, etc.)
+5. See 11 subdirectories: byteplus-modelark-code, claude-code-cli, cursor-business, cursor-pro, deepseek-flash, devin-pro, github-copilot-business, github-copilot-pro, glm-coding-plan, muse-coding-plan, muse-spark
 6. Each subdirectory contains `index.html`
 7. See `favicon.ico` and `favicon.svg` in `dist/`
 
@@ -105,9 +105,10 @@ Doctor includes route count check:
 
 ```bash
 # Check expected agent routes exist
-for agent_id in cursor-pro github-copilot-pro github-copilot-business \
-                devin-pro claude-code-cli muse-coding-plan glm-coding-plan \
-                byteplus-modelark-code cursor-business; do
+for agent_id in byteplus-modelark-code claude-code-cli cursor-business \
+                cursor-pro deepseek-flash devin-pro github-copilot-business \
+                github-copilot-pro glm-coding-plan muse-coding-plan \
+                muse-spark; do
   [ -f "dist/agen/$agent_id/index.html" ] && \
     echo "✓ /agen/$agent_id/" || echo "✗ Missing: /agen/$agent_id/"
 done
