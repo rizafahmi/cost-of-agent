@@ -5,9 +5,12 @@
 - **page-routing** — Each agent has `/agen/{id}/` route generated at build time
 - **header-section** — Agent name (h1), vendor, category/billing badges
 - **pricing-comparison** — Sticker vs. real cost side-by-side (when sticker exists)
+- **idr-dual-display** — USD and IDR pricing with kurs disclaimer
+- **effective-metrics** — Per-1M-token floor price when available
 - **price-explainer** — Bahasa explanation of why sticker ≠ real cost (when relevant)
 - **includes-list** — "Yang Termasuk" section with checkmark bullets
 - **caveats-list** — "Catatan Penting" section with warning bullets
+- **evidence-panel** — "Sumber & Bukti" with confidence badge and assumptions (when available)
 - **sources-section** — "Sumber Data" with clickable source links
 - **source-metadata** — Each source shows label, URL, "Dicek: YYYY-MM-DD"
 - **last-verified** — "Terakhir diverifikasi: YYYY-MM-DD" at bottom of sources
@@ -52,9 +55,9 @@ Expected output:
 
 Test multiple agents:
 ```bash
-node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs check-detail continue
-node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs check-detail github-copilot-individual
-node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs check-detail devin
+node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs check-detail cursor-pro
+node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs check-detail github-copilot-pro
+node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs check-detail devin-pro
 ```
 
 ### Get structural snapshot (JSON)
@@ -128,11 +131,11 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs stop
 
 1. **Price explainer conditional:** The "Kenapa beda?" explanation only appears when `stickerUsd` exists AND `bandHighUsd > stickerUsd`. Not all details have this section.
 
-2. **No sticker agents:** Continue, Aider, Claude Code CLI have no `stickerUsd`. Detail page doesn't show "Harga Sticker" section for these. Only "Biaya Nyata" appears.
+2. **No sticker agents:** BytePlus ModelArk, DeepSeek Flash, Muse Spark have no `stickerUsd`. Detail page doesn't show "Harga Sticker" section for these. Only "Biaya Nyata (USD)" appears.
 
-3. **Flat price agents:** GitHub Copilot Individual, GitHub Copilot Business, Codeium Free, Cursor Hobby, ChatGPT Plus, Devin have `bandLowUsd === bandHighUsd`. These show single price, not range.
+3. **Flat price agents:** Muse Coding Plan, GLM Coding Plan have `bandLowUsd === bandHighUsd`. These show single price, not range. Most agents show ranges.
 
-4. **Multiple sources:** Some agents have multiple source objects. Each renders as separate `.source-link`. Most have 1 source, Aider has 2.
+4. **Multiple sources:** Some agents have multiple source objects. Each renders as separate `.source-link`. Most have 1-2 sources; Devin Pro has 4.
 
 5. **Bahasa-only copy:** All headings and labels are in Bahasa Indonesia. English assertions will fail. Use "Yang Termasuk" not "Includes", "Catatan Penting" not "Caveats", "Sumber Data" not "Sources".
 
@@ -149,3 +152,9 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs stop
 11. **Selector stability:** Use semantic class names from SKILL.md: `h1` (agent name), `.vendor`, `.badge-category`, `.badge-billing`, `.price-band`, section headings by text content ("Yang Termasuk", etc.), `.source-link`, `a.back-link`.
 
 12. **Two back links:** Detail pages have back link at top AND bottom (footer). Either works. Count should be 2 per page.
+
+13. **Evidence panel conditional:** "Sumber & Bukti" section with confidence badge and assumptions only appears when agent has `confidence` or `assumptions` fields. Not all agents have this.
+
+14. **Effective metrics display:** Per-1M-token pricing ("Metrik Efektif") only shown when `effectivePerMTokUsd` is defined. When assumptions exist but no metric, shows placeholder text "Estimasi belum dihitung".
+
+15. **IDR pricing:** All detail pages show both USD and IDR. IDR calculated from mid-market rate in kurs disclaimer. Labeled "Biaya Nyata (USD)" not just "Biaya Nyata".
