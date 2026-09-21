@@ -5,9 +5,12 @@
 - **page-routing** — Each agent has `/agen/{id}/` route generated at build time
 - **header-section** — Agent name (h1), vendor, category/billing badges
 - **pricing-comparison** — Sticker vs. real cost side-by-side (when sticker exists)
-- **price-explainer** — Bahasa explanation of why sticker ≠ real cost (when relevant)
+- **price-explainer** — Bahasa explanation of why sticker ≠ real cost (when `stickerUsd > 0` AND `bandHighUsd > stickerUsd`)
+- **idr-display** — Real cost shown in both USD and IDR with kurs disclaimer
+- **effective-metric** — Optional "Metrik Efektif" showing per-1M-token cost
 - **includes-list** — "Yang Termasuk" section with checkmark bullets
 - **caveats-list** — "Catatan Penting" section with warning bullets
+- **evidence-panel** — Optional "📊 Sumber & Bukti" with assumptions and confidence level
 - **sources-section** — "Sumber Data" with clickable source links
 - **source-metadata** — Each source shows label, URL, "Dicek: YYYY-MM-DD"
 - **last-verified** — "Terakhir diverifikasi: YYYY-MM-DD" at bottom of sources
@@ -52,9 +55,9 @@ Expected output:
 
 Test multiple agents:
 ```bash
-node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs check-detail continue
-node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs check-detail github-copilot-individual
-node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs check-detail devin
+node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs check-detail byteplus-modelark-code
+node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs check-detail github-copilot-pro
+node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs check-detail devin-pro
 ```
 
 ### Get structural snapshot (JSON)
@@ -126,13 +129,13 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs stop
 
 ## Gotchas
 
-1. **Price explainer conditional:** The "Kenapa beda?" explanation only appears when `stickerUsd` exists AND `bandHighUsd > stickerUsd`. Not all details have this section.
+1. **Price explainer conditional:** The "Kenapa beda?" explanation only appears when `stickerUsd > 0` AND `bandHighUsd > stickerUsd`. Not all details have this section.
 
-2. **No sticker agents:** Continue, Aider, Claude Code CLI have no `stickerUsd`. Detail page doesn't show "Harga Sticker" section for these. Only "Biaya Nyata" appears.
+2. **No sticker agents:** BytePlus ModelArk, DeepSeek Flash, Muse Spark have no `stickerUsd`. Detail page doesn't show "Harga Sticker" section for these. Only "Biaya Nyata" appears.
 
-3. **Flat price agents:** GitHub Copilot Individual, GitHub Copilot Business, Codeium Free, Cursor Hobby, ChatGPT Plus, Devin have `bandLowUsd === bandHighUsd`. These show single price, not range.
+3. **Price ranges:** All agents in current data show price ranges (`bandLowUsd !== bandHighUsd`), displaying as `US$5 – US$80` format. Single-price display would appear if low equals high.
 
-4. **Multiple sources:** Some agents have multiple source objects. Each renders as separate `.source-link`. Most have 1 source, Aider has 2.
+4. **Multiple sources:** Some agents have multiple source objects. Each renders as separate `.source-link`. Most have 1 source, Cursor Pro and others have 2+.
 
 5. **Bahasa-only copy:** All headings and labels are in Bahasa Indonesia. English assertions will fail. Use "Yang Termasuk" not "Includes", "Catatan Penting" not "Caveats", "Sumber Data" not "Sources".
 
