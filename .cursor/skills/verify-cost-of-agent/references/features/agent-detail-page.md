@@ -8,10 +8,14 @@
 - **price-explainer** — Bahasa explanation of why sticker ≠ real cost (when relevant)
 - **includes-list** — "Yang Termasuk" section with checkmark bullets
 - **caveats-list** — "Catatan Penting" section with warning bullets
+- **effective-metric** — "Metrik Efektif" showing per-1M-token USD cost (when available)
+- **kurs-disclaimer** — "Catatan Kurs" explaining IDR conversion rate
+- **evidence-section** — "Sumber & Bukti" with assumptions and confidence level (when available)
 - **sources-section** — "Sumber Data" with clickable source links
 - **source-metadata** — Each source shows label, URL, "Dicek: YYYY-MM-DD"
 - **last-verified** — "Terakhir diverifikasi: YYYY-MM-DD" at bottom of sources
 - **back-navigation** — "← Kembali ke daftar" link to home (appears top and bottom)
+- **idr-pricing** — IDR equivalent prices shown alongside USD
 
 ## How to get to it (user POV)
 
@@ -52,9 +56,9 @@ Expected output:
 
 Test multiple agents:
 ```bash
-node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs check-detail continue
-node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs check-detail github-copilot-individual
-node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs check-detail devin
+node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs check-detail byteplus-modelark-code
+node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs check-detail github-copilot-pro
+node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs check-detail devin-pro
 ```
 
 ### Get structural snapshot (JSON)
@@ -128,11 +132,11 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs stop
 
 1. **Price explainer conditional:** The "Kenapa beda?" explanation only appears when `stickerUsd` exists AND `bandHighUsd > stickerUsd`. Not all details have this section.
 
-2. **No sticker agents:** Continue, Aider, Claude Code CLI have no `stickerUsd`. Detail page doesn't show "Harga Sticker" section for these. Only "Biaya Nyata" appears.
+2. **No sticker agents:** BytePlus ModelArk, DeepSeek V4.1 Flash, and Muse Spark have no `stickerUsd`. Detail page doesn't show "Harga Sticker" section for these. Only "Biaya Nyata (USD)" appears.
 
-3. **Flat price agents:** GitHub Copilot Individual, GitHub Copilot Business, Codeium Free, Cursor Hobby, ChatGPT Plus, Devin have `bandLowUsd === bandHighUsd`. These show single price, not range.
+3. **All agents have price ranges:** Every agent has `bandLowUsd !== bandHighUsd`, showing range format (e.g., `US$5 – US$80` or `US$20 – US$60`).
 
-4. **Multiple sources:** Some agents have multiple source objects. Each renders as separate `.source-link`. Most have 1 source, Aider has 2.
+4. **Multiple sources:** Agent source counts vary. Only Muse Coding Plan has 1 source; most have 2+. Devin Pro has 4 sources.
 
 5. **Bahasa-only copy:** All headings and labels are in Bahasa Indonesia. English assertions will fail. Use "Yang Termasuk" not "Includes", "Catatan Penting" not "Caveats", "Sumber Data" not "Sources".
 
