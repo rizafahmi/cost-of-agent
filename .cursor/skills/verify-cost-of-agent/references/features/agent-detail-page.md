@@ -8,6 +8,9 @@
 - **price-explainer** — Bahasa explanation of why sticker ≠ real cost (when relevant)
 - **includes-list** — "Yang Termasuk" section with checkmark bullets
 - **caveats-list** — "Catatan Penting" section with warning bullets
+- **effective-metrics** — "Metrik Efektif" section showing per-token costs when available
+- **kurs-notice** — "Catatan Kurs" disclaimer about USD/IDR conversion
+- **evidence-section** — "Sumber & Bukti" section with assumptions and confidence notes
 - **sources-section** — "Sumber Data" with clickable source links
 - **source-metadata** — Each source shows label, URL, "Dicek: YYYY-MM-DD"
 - **last-verified** — "Terakhir diverifikasi: YYYY-MM-DD" at bottom of sources
@@ -52,9 +55,9 @@ Expected output:
 
 Test multiple agents:
 ```bash
-node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs check-detail continue
-node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs check-detail github-copilot-individual
-node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs check-detail devin
+node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs check-detail cursor-pro
+node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs check-detail github-copilot-pro
+node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs check-detail devin-pro
 ```
 
 ### Get structural snapshot (JSON)
@@ -69,7 +72,7 @@ Expected structure:
 {
   "url": "http://127.0.0.1:4323/agen/cursor-pro/",
   "statusCode": 200,
-  "timestamp": "2026-09-09T23:10:41.428Z",
+  "timestamp": "2026-09-25T01:28:23.000Z",
   "structure": {
     "type": "detail",
     "agentName": "Cursor Pro",
@@ -128,11 +131,11 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs stop
 
 1. **Price explainer conditional:** The "Kenapa beda?" explanation only appears when `stickerUsd` exists AND `bandHighUsd > stickerUsd`. Not all details have this section.
 
-2. **No sticker agents:** Continue, Aider, Claude Code CLI have no `stickerUsd`. Detail page doesn't show "Harga Sticker" section for these. Only "Biaya Nyata" appears.
+2. **No sticker agents:** BytePlus ModelArk, DeepSeek Flash, Muse Spark have no `stickerUsd`. Detail page doesn't show "Harga Sticker" section for these. Only "Biaya Nyata (USD)" appears.
 
-3. **Flat price agents:** GitHub Copilot Individual, GitHub Copilot Business, Codeium Free, Cursor Hobby, ChatGPT Plus, Devin have `bandLowUsd === bandHighUsd`. These show single price, not range.
+3. **Price range agents:** All current agents have `bandLowUsd !== bandHighUsd` (price ranges). Examples: GitHub Copilot Pro ($10-$39), Cursor Pro ($20-$60), Devin Pro ($20-$200).
 
-4. **Multiple sources:** Some agents have multiple source objects. Each renders as separate `.source-link`. Most have 1 source, Aider has 2.
+4. **Multiple sources:** Most agents have 2 source objects. Devin Pro has 4. Each renders as separate `.source-link`.
 
 5. **Bahasa-only copy:** All headings and labels are in Bahasa Indonesia. English assertions will fail. Use "Yang Termasuk" not "Includes", "Catatan Penting" not "Caveats", "Sumber Data" not "Sources".
 
@@ -140,7 +143,7 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs stop
 
 7. **Route trailing slash:** Astro generates `/agen/[id]/index.html`. URLs must end with `/` or may 404 or redirect. Example: `/agen/cursor-pro/` works, `/agen/cursor-pro` may not.
 
-8. **Source checkedAt format:** Dates are YYYY-MM-DD strings from data file. Display format is "Dicek: 2026-09-09" (Bahasa "checked at").
+8. **Source checkedAt format:** Dates are YYYY-MM-DD strings from data file. Display format is "Dicek: 2026-09-10" (Bahasa "checked at").
 
 9. **lastVerified placement:** Appears at bottom of sources section as separate paragraph, not in sources array. Independent field on agent object.
 

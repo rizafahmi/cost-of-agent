@@ -60,7 +60,7 @@ Should return status 200 and HTML content.
 node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs get /agen/cursor-pro/
 
 # Check multiple detail pages
-for agent_id in continue github-copilot-individual devin; do
+for agent_id in github-copilot-pro github-copilot-business devin-pro; do
   echo "Testing /agen/$agent_id/..."
   node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs get /agen/$agent_id/ > /dev/null && \
     echo "  ✓ Accessible" || echo "  ✗ 404"
@@ -88,9 +88,9 @@ echo "$HOME_HTML" | grep -q 'href="/agen/cursor-pro/"' && \
 
 Or use order command to verify all hrefs:
 ```bash
-# Order command extracts hrefs, verifies all 12 agent links present
+# Order command extracts hrefs, verifies all 11 agent links present
 node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs order
-# Output: 12 agent IDs means 12 working links
+# Output: 11 agent IDs means 11 working links
 ```
 
 ### Verify detail links back to home
@@ -108,9 +108,9 @@ echo "$DETAIL_HTML" | grep -q "← Kembali ke daftar" && \
 ### Verify invalid route returns error
 
 ```bash
-# Try to fetch nonexistent agent
-node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs get /agen/nonexistent/ 2>&1 | grep -q "Request failed" && \
-  echo "✓ Invalid agent returns error" || echo "✗ Invalid agent did not error"
+# Try to fetch nonexistent agent (exit code non-zero + prints "Status: 404")
+node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs get /agen/nonexistent/
+echo "exit code: $?" # expect non-zero
 ```
 
 ### Full navigation validation
@@ -148,14 +148,14 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs stop
 
 6. **No client-side JS:** Site has minimal/no JavaScript for routing. All navigation is traditional HTML links + browser history. No hydration or app mounting to wait for.
 
-7. **404 pages:** Invalid routes like `/agen/nonexistent/` serve Astro's default 404. In preview mode, may return 404 status or redirect. Test with CLI `get` command — will show error.
+7. **404 pages:** Invalid routes like `/agen/nonexistent/` serve Astro's default 404. Preview mode returns exit code 1 and prints "Status: 404" in CLI output.
 
 8. **External links:** Source links on detail pages have `target="_blank"`. These open new tabs, don't navigate away. Not part of navigation flow testing.
 
 9. **Anchor links:** No intra-page anchors (no `#includes` or `#caveats` fragment identifiers). All navigation is full page. Can't test scroll-to-section.
 
-10. **URL case sensitivity:** Agent IDs are lowercase with hyphens (e.g., `github-copilot-individual`). URLs are case-sensitive. `/agen/GitHub-Copilot-Individual/` will 404.
+10. **URL case sensitivity:** Agent IDs are lowercase with hyphens (e.g., `github-copilot-pro`). URLs are case-sensitive. `/agen/GitHub-Copilot-Pro/` will 404.
 
-11. **Route validation:** The `order` command validates all home→detail links exist by extracting hrefs. If order returns 12 IDs, all navigation paths are present.
+11. **Route validation:** The `order` command validates all home→detail links exist by extracting hrefs. If order returns 11 IDs, all navigation paths are present.
 
 12. **Deep link validation:** The `check-detail` command validates each detail route can be accessed directly (deep linking works).

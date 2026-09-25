@@ -7,7 +7,7 @@
 - **home-route** — Generates `dist/index.html` for `/` route
 - **agent-routes** — Generates `dist/agen/{id}/index.html` for all 11 agents
 - **route-count** — Exactly 12 HTML files (1 home + 11 agents)
-- **asset-copying** — Favicon files copied to `dist/`
+- **asset-copying** — Favicon files (svg + ico) copied to `dist/`
 - **build-logs** — Output shows "12 page(s) built" confirmation
 - **clean-build** — No TypeScript errors or Astro warnings
 - **static-mode** — Astro config enforces `output: 'static'` (no SSR)
@@ -71,6 +71,9 @@ ls -1 dist/agen/ | wc -l  # Should be 11
 
 # List all agent routes
 ls -1 dist/agen/*/index.html
+
+# Check favicons copied
+ls -la dist/favicon.svg dist/favicon.ico
 ```
 
 ### Full smoke test (includes build check)
@@ -107,7 +110,7 @@ Doctor includes route count check:
 # Check expected agent routes exist
 for agent_id in cursor-pro github-copilot-pro github-copilot-business \
                 devin-pro claude-code-cli muse-coding-plan glm-coding-plan \
-                byteplus-modelark-code cursor-business; do
+                byteplus-modelark-code cursor-business deepseek-flash muse-spark; do
   [ -f "dist/agen/$agent_id/index.html" ] && \
     echo "✓ /agen/$agent_id/" || echo "✗ Missing: /agen/$agent_id/"
 done
