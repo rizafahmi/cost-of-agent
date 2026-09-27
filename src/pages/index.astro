@@ -1,8 +1,12 @@
 ---
 import { agents, USD_IDR, kursCheckedAt } from '../data/agents';
 
-// Sort by bandLowUsd ascending
-const sortedAgents = [...agents].sort((a, b) => a.bandLowUsd - b.bandLowUsd);
+// Sort by bandLowUsd ascending, then by id alphabetically for ties
+const sortedAgents = [...agents].sort((a, b) => {
+  const priceDiff = a.bandLowUsd - b.bandLowUsd;
+  if (priceDiff !== 0) return priceDiff;
+  return a.id.localeCompare(b.id);
+});
 
 // Helper to format currency
 const formatUSD = (amount: number) => {

@@ -5,10 +5,10 @@
 - **build-succeeds** — `pnpm build` exits 0 without errors
 - **dist-directory** — Creates `dist/` with static HTML files
 - **home-route** — Generates `dist/index.html` for `/` route
-- **agent-routes** — Generates `dist/agen/{id}/index.html` for all 9 agents
-- **route-count** — Exactly 10 HTML files (1 home + 9 agents)
+- **agent-routes** — Generates `dist/agen/{id}/index.html` for all 11 agents
+- **route-count** — Exactly 12 HTML files (1 home + 11 agents)
 - **asset-copying** — Favicon files copied to `dist/`
-- **build-logs** — Output shows "10 page(s) built" confirmation
+- **build-logs** — Output shows "12 page(s) built" confirmation
 - **clean-build** — No TypeScript errors or Astro warnings
 - **static-mode** — Astro config enforces `output: 'static'` (no SSR)
 
@@ -23,7 +23,7 @@
    - "output: static"
    - "Building static entrypoints..."
    - Route generation for each page
-4. See final message with page count (e.g., "10 page(s) built" for current 9 agents)
+4. See final "12 page(s) built" confirmation
 5. `dist/` directory appears in file tree
 
 ### Verify build artifacts
@@ -32,7 +32,7 @@
 2. See `index.html` (home page)
 3. See `agen/` subdirectory
 4. Open `agen/` directory
-5. See 9 subdirectories (cursor-pro, github-copilot-pro, github-copilot-business, devin-pro, claude-code-cli, muse-code, glm-coding-plan, byteplus-modelark-code, cursor-business)
+5. See 11 subdirectories (cursor-pro, github-copilot-pro, muse-coding-plan, deepseek-flash, muse-spark, etc.)
 6. Each subdirectory contains `index.html`
 7. See `favicon.ico` and `favicon.svg` in `dist/`
 
@@ -67,7 +67,7 @@ ls -la dist/index.html
 ls -la dist/agen/
 
 # Count agent directories
-ls -1 dist/agen/ | wc -l  # Should be 9
+ls -1 dist/agen/ | wc -l  # Should be 11
 
 # List all agent routes
 ls -1 dist/agen/*/index.html
@@ -89,7 +89,7 @@ Smoke test stage 1: "Build check"
 
 ```bash
 # Count all index.html files
-find dist -name "index.html" | wc -l  # Should be 10
+find dist -name "index.html" | wc -l  # Should be 12
 
 # Or use doctor
 node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs doctor
@@ -98,16 +98,16 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs doctor
 Doctor includes route count check:
 ```
 [4/4] Checking route count...
-  ✓ Route count: 10 (1 home + 9 agents)
+  ✓ Route count: 12 (1 home + 11 agents)
 ```
 
 ### Verify specific routes
 
 ```bash
-# Check expected agent routes exist (ordered by cost low to high)
-for agent_id in muse-code byteplus-modelark-code github-copilot-pro \
-                glm-coding-plan github-copilot-business cursor-pro \
-                devin-pro claude-code-cli cursor-business; do
+# Check expected agent routes exist
+for agent_id in cursor-pro github-copilot-pro github-copilot-business \
+                devin-pro claude-code-cli muse-coding-plan glm-coding-plan \
+                byteplus-modelark-code cursor-business; do
   [ -f "dist/agen/$agent_id/index.html" ] && \
     echo "✓ /agen/$agent_id/" || echo "✗ Missing: /agen/$agent_id/"
 done
@@ -119,9 +119,9 @@ done
 # Run build and capture output
 pnpm build 2>&1 | tee /tmp/build-output.txt
 
-# Check for page count (should be 10 for current 9 agents)
-grep -q "page(s) built" /tmp/build-output.txt && \
-  echo "✓ Build message shows page count" || echo "✗ No page count in output"
+# Check for "12 page(s) built"
+grep -q "12 page(s) built" /tmp/build-output.txt && \
+  echo "✓ Build message confirms 12 pages" || echo "✗ Unexpected page count"
 
 # Check for "static" mode
 grep -q 'output: "static"' /tmp/build-output.txt && \
