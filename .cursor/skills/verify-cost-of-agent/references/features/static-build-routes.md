@@ -5,8 +5,8 @@
 - **build-succeeds** — `pnpm build` exits 0 without errors
 - **dist-directory** — Creates `dist/` with static HTML files
 - **home-route** — Generates `dist/index.html` for `/` route
-- **agent-routes** — Generates `dist/agen/{id}/index.html` for all 11 agents
-- **route-count** — Exactly 12 HTML files (1 home + 11 agents)
+- **agent-routes** — Generates `dist/agen/{id}/index.html` for all 12 agents
+- **route-count** — Exactly 13 HTML files (1 home + 12 agents)
 - **asset-copying** — Favicon files copied to `dist/`
 - **build-logs** — Output shows "12 page(s) built" confirmation
 - **clean-build** — No TypeScript errors or Astro warnings
@@ -98,7 +98,7 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs doctor
 Doctor includes route count check:
 ```
 [4/4] Checking route count...
-  ✓ Route count: 12 (1 home + 11 agents)
+  ✓ Route count: 13 (1 home + 12 agents)
 ```
 
 ### Verify specific routes

@@ -255,7 +255,7 @@ async function cmdDoctor() {
     ).trim();
     const count = parseInt(indexFiles);
     if (count === 12) {
-      console.log(`  ✓ Route count: ${count} (1 home + 11 agents)`);
+      console.log(`  ✓ Route count: ${count} (1 home + 12 agents)`);
     } else {
       console.log(`  ✗ FAIL: Expected 12 routes, found ${count}`);
       allPassed = false;

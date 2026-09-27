@@ -4,7 +4,7 @@ Testable feature surfaces for the Cost-of-Agent Astro static site. Each feature 
 
 ## Features
 
-**[home-agent-list.md](home-agent-list.md)** — Home page agent directory with cost-sorted cards (12 agents, continue→devin order)
+**[home-agent-list.md](home-agent-list.md)** — Home page agent directory with cost-sorted cards (12 agents, sorted by bandLowUsd)
 
 **[agent-detail-page.md](agent-detail-page.md)** — Individual agent detail pages with pricing breakdown, includes, caveats, sources (Bahasa sections)
 

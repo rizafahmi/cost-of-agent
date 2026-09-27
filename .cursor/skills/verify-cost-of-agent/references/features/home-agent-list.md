@@ -2,7 +2,7 @@
 
 ## Sub-features
 
-- **agent-cards-display** — All 11 agents render as individual clickable cards
+- **agent-cards-display** — All 12 agents render as individual clickable cards
 - **cost-based-sorting** — Cards sorted by `bandLowUsd` ascending, then by ID alphabetically (lowest first: byteplus-modelark-code→cursor-business)
 - **card-content** — Each card shows name, vendor, category badge, billing badge, price band
 - **sticker-vs-band** — Sticker price shown when present, struck through to emphasize real cost
@@ -41,7 +41,7 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs check-home
 
 Expected output:
 ```
-✓ Agent count: 11 (reasonable range)
+✓ Agent count: 12 (reasonable range)
 ✓ First agent: byteplus-modelark-code (lowest cost)
 ✓ Last agent: cursor-business (highest cost)
 ```
@@ -110,7 +110,7 @@ Doctor checks relevant to home page:
 - Build artifacts (dist/index.html exists)
 - Server responds (home page 200)
 - Key content (title, agent-card class)
-- Route count (10 total: 1 home + 9 agents)
+- Route count (13 total: 1 home + 12 agents)
 
 ### Cleanup
 
@@ -139,4 +139,4 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs stop
 
 9. **Selector stability:** Use semantic class names from SKILL.md: `a.agent-card`, `h2.agent-name`, `.agent-vendor`, `.price-band`, `.badge-category`, `.badge-billing`. Avoid element-only selectors.
 
-10. **Agent count assertion:** The CLI `check-home` asserts "reasonable range" (10-15 agents). Exact count 9 verified in `order` command output line count.
+10. **Agent count assertion:** The CLI `check-home` asserts "reasonable range" (10-15 agents). Exact count 12 verified in `order` command output line count.

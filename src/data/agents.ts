@@ -340,6 +340,59 @@ export const agents: AgentCost[] = [
     confidence: "high"
   },
   {
+    id: "qwencloud-token-plan",
+    name: "Qwen Cloud Token Plan",
+    vendor: "QwenCloud (Alibaba)",
+    category: "cli",
+    billing: "credits",
+    stickerUsd: 8,
+    bandLowUsd: 8,
+    bandHighUsd: 80,
+    includes: [
+      "Personal Edition tiers: Lite/Essential/Standard/Pro",
+      "Lite: 11,500 Credits/mo, 1–2 concurrent agents",
+      "Essential: 25,500 Credits/mo, 2–3 agents",
+      "Standard: 45,000 Credits/mo, 3–4 agents",
+      "Pro: 180,000 Credits/mo, 6–8 agents",
+      "Credit Pack: $15/pack/mo, 20,000 Credits (requires active sub, max 5)",
+      "Works with OpenAI/Anthropic-protocol tools (Qwen Code, Claude Code, Codex, Cursor, etc.)",
+      "Dedicated Token Plan API key (sk-sp-) + Base URL"
+    ],
+    caveats: [
+      "Harga list Lite $8, Essential $16, Standard $25, Pro $80 per bulan",
+      "Promo limited-time: Lite $6, Essential $10, Standard $18, Pro $68",
+      "Credit Pack: $15/pack (20,000 Credits), butuh active subscription, max 5 pack",
+      "Team seats tersedia (Standard $30→$20, Pro $100→$75, Max $200, Credit Pack $700) — harga per seat",
+      "Quota pauses saat exhausted (no auto overage)",
+      "Non-refundable, no account sharing on Individual plan",
+      "Unused monthly quota tidak roll over"
+    ],
+    sources: [
+      {
+        label: "Qwen Cloud Pricing - Token Plan",
+        url: "https://www.qwencloud.com/pricing/token-plan",
+        checkedAt: "2026-09-27"
+      },
+      {
+        label: "Token Plan Overview Docs",
+        url: "https://docs.qwencloud.com/token-plan/overview",
+        checkedAt: "2026-09-27"
+      },
+      {
+        label: "Personal Token Plan FAQ",
+        url: "https://docs.qwencloud.com/token-plan/personal/token-plan-personal-faq",
+        checkedAt: "2026-09-27"
+      }
+    ],
+    lastVerified: "2026-09-27",
+    assumptions: [
+      "Band $8-80 menggunakan list price (Lite $8 → Pro $80) untuk Personal Edition",
+      "Promo pricing documented in caveats tapi band based on list price",
+      "Credit economics tidak dipublikasi dalam per-token detail, sehingga effectivePerMTokUsd tidak dihitung"
+    ],
+    confidence: "high"
+  },
+  {
     id: "byteplus-modelark-code",
     name: "BytePlus ModelArk (Dola-Seed Code API)",
     vendor: "BytePlus / ByteDance",
