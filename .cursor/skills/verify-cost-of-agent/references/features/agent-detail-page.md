@@ -12,6 +12,10 @@
 - **source-metadata** — Each source shows label, URL, "Dicek: YYYY-MM-DD"
 - **last-verified** — "Terakhir diverifikasi: YYYY-MM-DD" at bottom of sources
 - **back-navigation** — "← Kembali ke daftar" link to home (appears top and bottom)
+- **idr-display** — IDR equivalent shown below USD pricing
+- **kurs-disclaimer** — Exchange rate explanation with source date
+- **effective-metric** — Optional "Metrik Efektif" showing cost per 1M tokens
+- **evidence-panel** — Optional "Sumber & Bukti" section with assumptions list and confidence badge
 
 ## How to get to it (user POV)
 
@@ -52,9 +56,9 @@ Expected output:
 
 Test multiple agents:
 ```bash
-node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs check-detail continue
-node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs check-detail github-copilot-individual
-node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs check-detail devin
+node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs check-detail muse-code
+node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs check-detail github-copilot-pro
+node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs check-detail devin-pro
 ```
 
 ### Get structural snapshot (JSON)
@@ -128,11 +132,11 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs stop
 
 1. **Price explainer conditional:** The "Kenapa beda?" explanation only appears when `stickerUsd` exists AND `bandHighUsd > stickerUsd`. Not all details have this section.
 
-2. **No sticker agents:** Continue, Aider, Claude Code CLI have no `stickerUsd`. Detail page doesn't show "Harga Sticker" section for these. Only "Biaya Nyata" appears.
+2. **No sticker agents:** BytePlus ModelArk Code has no `stickerUsd`. Detail page doesn't show "Harga Sticker" section for this agent. Only "Biaya Nyata" appears.
 
-3. **Flat price agents:** GitHub Copilot Individual, GitHub Copilot Business, Codeium Free, Cursor Hobby, ChatGPT Plus, Devin have `bandLowUsd === bandHighUsd`. These show single price, not range.
+3. **All prices are ranges:** All current agents have `bandLowUsd < bandHighUsd`. These show price ranges (e.g., `US$20 – US$60`), not single flat prices.
 
-4. **Multiple sources:** Some agents have multiple source objects. Each renders as separate `.source-link`. Most have 1 source, Aider has 2.
+4. **Multiple sources:** Some agents have multiple source objects. Each renders as separate `.source-link`. Most have 2 sources, Devin Pro has 3, Muse Code has 1.
 
 5. **Bahasa-only copy:** All headings and labels are in Bahasa Indonesia. English assertions will fail. Use "Yang Termasuk" not "Includes", "Catatan Penting" not "Caveats", "Sumber Data" not "Sources".
 
@@ -140,7 +144,7 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs stop
 
 7. **Route trailing slash:** Astro generates `/agen/[id]/index.html`. URLs must end with `/` or may 404 or redirect. Example: `/agen/cursor-pro/` works, `/agen/cursor-pro` may not.
 
-8. **Source checkedAt format:** Dates are YYYY-MM-DD strings from data file. Display format is "Dicek: 2026-09-09" (Bahasa "checked at").
+8. **Source checkedAt format:** Dates are YYYY-MM-DD strings from data file. Display format is "Dicek: 2026-09-10" (Bahasa "checked at").
 
 9. **lastVerified placement:** Appears at bottom of sources section as separate paragraph, not in sources array. Independent field on agent object.
 

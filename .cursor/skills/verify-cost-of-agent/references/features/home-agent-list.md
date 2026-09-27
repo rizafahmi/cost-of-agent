@@ -59,6 +59,10 @@ byteplus-modelark-code
 deepseek-flash
 muse-coding-plan
 muse-spark
+Expected output (9 lines):
+```
+muse-code
+byteplus-modelark-code
 github-copilot-pro
 glm-coding-plan
 github-copilot-business
@@ -128,7 +132,7 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs stop
 
 4. **Sticker price optional:** Not all agents show sticker price. Some agents have `stickerUsd` defined while others show only the band range.
 
-5. **Flat vs. range prices:** Some agents have identical low/high band (e.g., GitHub Copilot Individual: `US$10`). Others show range (e.g., Cursor Pro: `US$20 – US$60`). DOM structure differs.
+5. **All prices are ranges:** All current agents show price ranges (e.g., Cursor Pro: `US$20 – US$60`, Muse Code: `US$5 – US$10`). DOM structure includes both low and high values.
 
 6. **Card order stability:** Sort is deterministic: by `bandLowUsd` ascending, then alphabetically by ID as tiebreaker. Agents with same cost (e.g., three at $5: byteplus-modelark-code, deepseek-flash, muse-coding-plan) are sorted alphabetically.
 
