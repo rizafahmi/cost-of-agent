@@ -161,10 +161,10 @@ async function cmdDoctor() {
   try {
     const agenDirs = execSync(`ls -1 "${join(DIST_DIR, 'agen')}" 2>/dev/null | wc -l`, { encoding: 'utf8' }).trim();
     const count = parseInt(agenDirs);
-    if (count === 11) {
+    if (count === 12) {
       console.log(`  ✓ Agent directories count: ${count}`);
     } else {
-      console.log(`  ✗ FAIL: Expected 11 agent directories, found ${count}`);
+      console.log(`  ✗ FAIL: Expected 12 agent directories, found ${count}`);
       allPassed = false;
     }
   } catch {
@@ -254,10 +254,10 @@ async function cmdDoctor() {
       { encoding: 'utf8' }
     ).trim();
     const count = parseInt(indexFiles);
-    if (count === 12) {
-      console.log(`  ✓ Route count: ${count} (1 home + 11 agents)`);
+    if (count === 13) {
+      console.log(`  ✓ Route count: ${count} (1 home + 12 agents)`);
     } else {
-      console.log(`  ✗ FAIL: Expected 12 routes, found ${count}`);
+      console.log(`  ✗ FAIL: Expected 13 routes, found ${count}`);
       allPassed = false;
     }
   } catch (err) {

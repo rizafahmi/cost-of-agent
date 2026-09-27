@@ -15,7 +15,7 @@ Systematic verification for the Cost-of-Agent static site — a Bahasa Indonesia
 
 **Tech stack:** Astro 7.x + TypeScript, static site generator (`output: 'static'`)
 
-**Data source:** `src/data/agents.ts` (typed array of 11 agents)
+**Data source:** `src/data/agents.ts` (typed array of 12 agents)
 
 **Key features:**
 - Agent cards showing name, vendor, category, billing type, price band
@@ -70,7 +70,7 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs doctor
 # 1. Build artifacts exist (dist/index.html, dist/agen/, 11 agent dirs)
 # 2. Server responds (home 200, detail 200)
 # 3. Key content present (title, agent-card, Bahasa sections)
-# 4. Route count (12 total: 1 home + 11 agents)
+# 4. Route count (13 total: 1 home + 12 agents)
 # Exit code 0 = all passed, non-zero = failures
 ```
 
@@ -105,9 +105,9 @@ await page.goto('http://127.0.0.1:4323/');
 const title = await page.$eval('h1', el => el.textContent);
 assert(title.includes('Cost of Agent'));
 
-// Count agent cards (should be 11)
+// Count agent cards (should be 12)
 const cardCount = await page.$$eval('a.agent-card', cards => cards.length);
-assert(cardCount === 11);
+assert(cardCount === 12);
 
 // Click first card (byteplus-modelark-code - lowest bandLowUsd, alphabetically first)
 const firstCardHref = await page.$eval('a.agent-card', el => el.href);

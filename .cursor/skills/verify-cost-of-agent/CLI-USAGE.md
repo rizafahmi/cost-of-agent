@@ -58,7 +58,7 @@ node control-cost-of-agent.mjs doctor
 #   1. Build artifacts (dist/index.html, dist/agen/, 9 agent dirs)
 #   2. Server response (home 200, detail 200)
 #   3. Key content (title, agent-card, Bahasa sections)
-#   4. Route count (10 total: 1 home + 9 agents)
+#   4. Route count (13 total: 1 home + 12 agents)
 # Output: ✓/✗ lines for each check
 # Exit: 0 = all passed, non-zero = failures
 ```
