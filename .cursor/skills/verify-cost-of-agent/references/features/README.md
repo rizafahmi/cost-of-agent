@@ -10,7 +10,7 @@ Testable feature surfaces for the Cost-of-Agent Astro static site. Each feature 
 
 **[navigation-flow.md](navigation-flow.md)** — Home ↔ detail navigation via card clicks and back links
 
-**[static-build-routes.md](static-build-routes.md)** — Static site generation produces 13 routes (1 home + 12 agents)
+**[static-build-routes.md](static-build-routes.md)** — Static site generation produces 12 routes (1 home + 11 agents)
 
 ## Driving Features
 

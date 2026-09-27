@@ -53,20 +53,23 @@ Expected output:
 node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs order
 ```
 
-Expected output (12 lines):
+Expected output (11 lines):
 ```
-continue
-codeium-free
-cursor-hobby
-aider
-github-copilot-individual
-claude-code-cli
-windsurf-pro
+byteplus-modelark-code
+deepseek-flash
+muse-coding-plan
+muse-spark
+Expected output (9 lines):
+```
+muse-code
+byteplus-modelark-code
+github-copilot-pro
+glm-coding-plan
 github-copilot-business
+claude-code-cli
 cursor-pro
-openai-chatgpt-plus
+devin-pro
 cursor-business
-devin
 ```
 
 ### Get structural snapshot (JSON)
@@ -84,8 +87,8 @@ Expected structure:
   "timestamp": "2026-09-09T23:10:41.428Z",
   "structure": {
     "type": "home",
-    "agentCardCount": 12,
-    "agentIds": ["continue", "codeium-free", ...],
+    "agentCardCount": 11,
+    "agentIds": ["byteplus-modelark-code", "deepseek-flash", ...],
     "hasTitle": true,
     "hasBahasaCopy": true
   }
@@ -125,13 +128,13 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs stop
 
 2. **Bahasa locale formatting:** Prices use Indonesian locale but USD currency, producing `US$20` not `$20` or `USD 20`. Don't assert American formatting patterns.
 
-3. **Zero-cost agents:** Three agents have `bandLowUsd: 0` (Continue, Codeium Free, Cursor Hobby). These display as `US$0` or `US$0 – US$50` (range). Continue is first due to sort order.
+3. **Low-cost agents:** Multiple agents share `bandLowUsd: 5` (BytePlus ModelArk, DeepSeek Flash, Muse Coding Plan). These are sorted first by price, then alphabetically by ID. BytePlus ModelArk appears first.
 
-4. **Sticker price optional:** Not all agents show sticker price. Only 7 of 12 have `stickerUsd` defined. Continue (first card) has no sticker — shows only band.
+4. **Sticker price optional:** Not all agents show sticker price. Some agents have `stickerUsd` defined while others show only the band range.
 
-5. **Flat vs. range prices:** Some agents have identical low/high band (e.g., GitHub Copilot Individual: `US$10`). Others show range (e.g., Cursor Pro: `US$20 – US$60`). DOM structure differs.
+5. **All prices are ranges:** All current agents show price ranges (e.g., Cursor Pro: `US$20 – US$60`, Muse Code: `US$5 – US$10`). DOM structure includes both low and high values.
 
-6. **Card order stability:** Sort is deterministic: by `bandLowUsd` ascending, then data file insertion order as tiebreaker. Agents with same cost (e.g., three at $0) maintain file order: Continue, Codeium Free, Cursor Hobby.
+6. **Card order stability:** Sort is deterministic: by `bandLowUsd` ascending, then alphabetically by ID as tiebreaker. Agents with same cost (e.g., three at $5: byteplus-modelark-code, deepseek-flash, muse-coding-plan) are sorted alphabetically.
 
 7. **Grid responsiveness:** Desktop shows 3-column grid (min 320px cards). Mobile switches to single column. Test both viewports if capturing screenshots.
 
