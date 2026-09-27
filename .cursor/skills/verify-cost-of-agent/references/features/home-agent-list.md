@@ -53,6 +53,12 @@ Expected output:
 node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs order
 ```
 
+Expected output (11 lines):
+```
+byteplus-modelark-code
+deepseek-flash
+muse-coding-plan
+muse-spark
 Expected output (9 lines):
 ```
 muse-code
@@ -60,9 +66,9 @@ byteplus-modelark-code
 github-copilot-pro
 glm-coding-plan
 github-copilot-business
+claude-code-cli
 cursor-pro
 devin-pro
-claude-code-cli
 cursor-business
 ```
 
@@ -81,8 +87,8 @@ Expected structure:
   "timestamp": "2026-09-09T23:10:41.428Z",
   "structure": {
     "type": "home",
-    "agentCardCount": 9,
-    "agentIds": ["muse-code", "byteplus-modelark-code", ...],
+    "agentCardCount": 11,
+    "agentIds": ["byteplus-modelark-code", "deepseek-flash", ...],
     "hasTitle": true,
     "hasBahasaCopy": true
   }
@@ -107,8 +113,7 @@ Doctor checks relevant to home page:
 - Build artifacts (dist/index.html exists)
 - Server responds (home page 200)
 - Key content (title, agent-card class)
-- Agent count (9 directories in dist/agen/)
-- Route count (10 total: 1 home + 9 agents)
+- Route count (12 total: 1 home + 11 agents)
 
 ### Cleanup
 
@@ -123,13 +128,13 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs stop
 
 2. **Bahasa locale formatting:** Prices use Indonesian locale but USD currency, producing `US$20` not `$20` or `USD 20`. Don't assert American formatting patterns.
 
-3. **Lowest-cost agents:** Two agents have `bandLowUsd: 5` (Muse Code, BytePlus ModelArk Code). These display as `US$5` or `US$5 – US$X` ranges. Muse Code is first due to sort order.
+3. **Low-cost agents:** Multiple agents share `bandLowUsd: 5` (BytePlus ModelArk, DeepSeek Flash, Muse Coding Plan). These are sorted first by price, then alphabetically by ID. BytePlus ModelArk appears first.
 
-4. **Sticker price optional:** Not all agents show sticker price. Only BytePlus ModelArk Code lacks `stickerUsd` — shows only band without sticker comparison.
+4. **Sticker price optional:** Not all agents show sticker price. Some agents have `stickerUsd` defined while others show only the band range.
 
 5. **All prices are ranges:** All current agents show price ranges (e.g., Cursor Pro: `US$20 – US$60`, Muse Code: `US$5 – US$10`). DOM structure includes both low and high values.
 
-6. **Card order stability:** Sort is deterministic: by `bandLowUsd` ascending, then data file insertion order as tiebreaker. Agents with same cost (e.g., two at $5) maintain file order: Muse Code, BytePlus ModelArk Code.
+6. **Card order stability:** Sort is deterministic: by `bandLowUsd` ascending, then alphabetically by ID as tiebreaker. Agents with same cost (e.g., three at $5: byteplus-modelark-code, deepseek-flash, muse-coding-plan) are sorted alphabetically.
 
 7. **Grid responsiveness:** Desktop shows 3-column grid (min 320px cards). Mobile switches to single column. Test both viewports if capturing screenshots.
 
@@ -137,4 +142,4 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs stop
 
 9. **Selector stability:** Use semantic class names from SKILL.md: `a.agent-card`, `h2.agent-name`, `.agent-vendor`, `.price-band`, `.badge-category`, `.badge-billing`. Avoid element-only selectors.
 
-10. **Agent count assertion:** The CLI `check-home` asserts "reasonable range" (8-12 agents). Exact count 9 verified in `order` command output line count.
+10. **Agent count assertion:** The CLI `check-home` asserts "reasonable range" (10-15 agents). Exact count 11 verified in `order` command output line count.

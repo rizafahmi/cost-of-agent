@@ -4,13 +4,13 @@ Testable feature surfaces for the Cost-of-Agent Astro static site. Each feature 
 
 ## Features
 
-**[home-agent-list.md](home-agent-list.md)** — Home page agent directory with cost-sorted cards (9 agents, muse-code→cursor-business order)
+**[home-agent-list.md](home-agent-list.md)** — Home page agent directory with cost-sorted cards (11 agents, byteplus-modelark-code→cursor-business order)
 
 **[agent-detail-page.md](agent-detail-page.md)** — Individual agent detail pages with pricing breakdown, includes, caveats, sources (Bahasa sections)
 
 **[navigation-flow.md](navigation-flow.md)** — Home ↔ detail navigation via card clicks and back links
 
-**[static-build-routes.md](static-build-routes.md)** — Static site generation produces 10 routes (1 home + 9 agents)
+**[static-build-routes.md](static-build-routes.md)** — Static site generation produces 12 routes (1 home + 11 agents)
 
 ## Driving Features
 
