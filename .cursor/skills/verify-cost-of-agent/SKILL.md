@@ -145,7 +145,7 @@ curl -s "$URL" | grep -q "Yang Termasuk" && echo "✓ Includes heading"
 curl -s "$URL" | grep -q "Catatan Penting" && echo "✓ Caveats heading"
 curl -s "$URL" | grep -q "Sumber Data" && echo "✓ Sources heading"
 curl -s "$URL" | grep -q "cursor.com/pricing" && echo "✓ Source link"
-curl -s "$URL" | grep -q "2026-09-09" && echo "✓ lastVerified date"
+curl -s "$URL" | grep -q "2026-09-10" && echo "✓ lastVerified date"
 ```
 
 ## Evidence
@@ -263,7 +263,7 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs smoke
 
 3. **Low-cost agents:** Multiple agents have low `bandLowUsd` values. Sort order is `bandLowUsd` ascending, then by ID alphabetically for ties.
 
-4. **Missing sticker:** Not all agents have `stickerUsd`. Only render sticker price if present. Example: Continue has no sticker, only band.
+4. **Missing sticker:** Not all agents have `stickerUsd`. Only render sticker price if present. Example: BytePlus ModelArk Code has no sticker, only band.
 
 5. **Bahasa copy:** All user-facing text is in Bahasa Indonesia. Headings like "Yang Termasuk", "Catatan Penting", "Sumber Data". Don't assert English headings.
 
