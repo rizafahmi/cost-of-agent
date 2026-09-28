@@ -53,16 +53,13 @@ Expected output:
 node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs order
 ```
 
-Expected output (11 lines):
+Expected output (12 lines):
 ```
 byteplus-modelark-code
 deepseek-flash
 muse-coding-plan
 muse-spark
-Expected output (9 lines):
-```
-muse-code
-byteplus-modelark-code
+qwencloud-token-plan
 github-copilot-pro
 glm-coding-plan
 github-copilot-business
@@ -87,7 +84,7 @@ Expected structure:
   "timestamp": "2026-09-09T23:10:41.428Z",
   "structure": {
     "type": "home",
-    "agentCardCount": 11,
+    "agentCardCount": 12,
     "agentIds": ["byteplus-modelark-code", "deepseek-flash", ...],
     "hasTitle": true,
     "hasBahasaCopy": true

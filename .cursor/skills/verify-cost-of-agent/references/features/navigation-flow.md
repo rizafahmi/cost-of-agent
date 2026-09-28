@@ -88,9 +88,9 @@ echo "$HOME_HTML" | grep -q 'href="/agen/cursor-pro/"' && \
 
 Or use order command to verify all hrefs:
 ```bash
-# Order command extracts hrefs, verifies all 9 agent links present
+# Order command extracts hrefs, verifies all 12 agent links present
 node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs order
-# Output: 9 agent IDs means 9 working links
+# Output: 12 agent IDs means 12 working links
 ```
 
 ### Verify detail links back to home
@@ -156,6 +156,6 @@ node .cursor/skills/verify-cost-of-agent/control-cost-of-agent.mjs stop
 
 10. **URL case sensitivity:** Agent IDs are lowercase with hyphens (e.g., `github-copilot-pro`). URLs are case-sensitive. `/agen/GitHub-Copilot-Pro/` will 404.
 
-11. **Route validation:** The `order` command validates all home→detail links exist by extracting hrefs. If order returns 9 IDs, all navigation paths are present.
+11. **Route validation:** The `order` command validates all home→detail links exist by extracting hrefs. If order returns 12 IDs, all navigation paths are present.
 
 12. **Deep link validation:** The `check-detail` command validates each detail route can be accessed directly (deep linking works).

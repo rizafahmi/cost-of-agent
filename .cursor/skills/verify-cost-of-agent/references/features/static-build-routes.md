@@ -32,7 +32,7 @@
 2. See `index.html` (home page)
 3. See `agen/` subdirectory
 4. Open `agen/` directory
-5. See 11 subdirectories (cursor-pro, github-copilot-pro, muse-coding-plan, deepseek-flash, muse-spark, etc.)
+5. See 12 subdirectories (cursor-pro, github-copilot-pro, muse-coding-plan, deepseek-flash, muse-spark, qwencloud-token-plan, glm-coding-plan, etc.)
 6. Each subdirectory contains `index.html`
 7. See `favicon.ico` and `favicon.svg` in `dist/`
 
